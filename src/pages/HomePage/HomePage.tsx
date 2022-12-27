@@ -10,7 +10,10 @@ import styles from "./HomePage.module.css";
 export const HomePage = (): JSX.Element => (
     <div className={styles.home_page_layout}>
         <div className={styles.home_page_title}>
-            {TextConstants.HOME_PAGE_TITLE}
+            {TextConstants.HOME_PAGE.TITLE}
+        </div>
+        <div className={styles.home_page_content}>
+            {TextConstants.HOME_PAGE.DESCRIPTION}
         </div>
     </div>
 );
