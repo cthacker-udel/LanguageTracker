@@ -33,8 +33,6 @@ export const LoginPage = (): JSX.Element => {
 
     const { errors, dirtyFields } = formState;
 
-    console.log(errors, dirtyFields, validateObject(dirtyFields));
-
     return (
         <Layout>
             <div className={styles.login_page_layout}>
