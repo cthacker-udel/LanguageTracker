@@ -3,6 +3,7 @@ import "./index.css";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { HomePage } from "./pages/HomePage";
 
@@ -13,6 +14,17 @@ const root = ReactDOM.createRoot(
 
 root.render(
     <React.StrictMode>
-        <HomePage />
+        <BrowserRouter>
+            <Routes>
+                <Route path="*">
+                    <Route element={<HomePage />} index />
+                    <Route element={<span>{"Login page"}</span>} path="login" />
+                    <Route
+                        element={<span>{"SignUp Page"}</span>}
+                        path="signup"
+                    />
+                </Route>
+            </Routes>
+        </BrowserRouter>
     </React.StrictMode>,
 );
