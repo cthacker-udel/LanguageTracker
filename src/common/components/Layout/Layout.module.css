@@ -5,3 +5,8 @@
     flex-direction: column;
     justify-content: center;
 }
+
+.children_layout {
+    width: 75%;
+    align-self: center;
+}

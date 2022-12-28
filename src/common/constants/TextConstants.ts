@@ -6,4 +6,11 @@ export const TextConstants = {
         SIGN_UP_BUTTON: "Sign Up",
         TITLE: "Welcome to the Language Tracker Application!",
     },
+    LOGIN_PAGE: {
+        LOGIN_BUTTON: "Login",
+        PASSWORD_LABEL: "Password",
+        SIGN_UP_BUTTON: "Sign Up",
+        TITLE: "Login Page",
+        USERNAME_LABEL: "Username",
+    },
 };
