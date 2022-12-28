@@ -1,8 +1,21 @@
 import React from "react";
+import { Form } from "react-bootstrap";
+import Button from "react-bootstrap/esm/Button";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-import { Layout, TextConstants } from "../../common";
+import {
+    Layout,
+    TextConstants,
+    validateObject,
+    ValueConstants,
+} from "../../common";
 import styles from "./LoginPage.module.css";
+
+type FormData = {
+    username: string;
+    password: string;
+};
 
 /**
  * The login page, which is just a simple form for the user to login
@@ -12,59 +25,140 @@ import styles from "./LoginPage.module.css";
 export const LoginPage = (): JSX.Element => {
     const navigate = useNavigate();
 
+    const { formState, register } = useForm<FormData>({
+        defaultValues: { password: "", username: "" },
+        mode: "all",
+        reValidateMode: "onBlur",
+    });
+
+    const { errors, dirtyFields } = formState;
+
+    console.log(errors, dirtyFields, validateObject(dirtyFields));
+
     return (
         <Layout>
             <div className={styles.login_page_layout}>
                 <div className={styles.login_page_title}>
                     {TextConstants.LOGIN_PAGE.TITLE}
                 </div>
-                <form className={styles.login_form}>
-                    <div className={styles.login_page_form_layout}>
-                        <label
-                            className={styles.login_page_form_layout_label}
-                            htmlFor="username_form"
-                        >
+                <Form className={styles.login_form}>
+                    <Form.Group controlId="formBasicUsername">
+                        <Form.Label>
                             {TextConstants.LOGIN_PAGE.USERNAME_LABEL}
-                        </label>
-                        <input
-                            className={styles.login_page_form_layout_input}
-                            id="username_form"
-                            tabIndex={1}
+                        </Form.Label>
+                        <Form.Control
+                            isInvalid={
+                                validateObject(errors.username) &&
+                                validateObject(dirtyFields) &&
+                                dirtyFields.username
+                            }
+                            isValid={
+                                !errors.username &&
+                                validateObject(dirtyFields) &&
+                                dirtyFields.username
+                            }
                             type="text"
+                            {...register("username", {
+                                maxLength: {
+                                    message:
+                                        TextConstants.INVALID.LOGIN_PAGE
+                                            .USERNAME.maxLength,
+                                    value: ValueConstants.LOGIN_PAGE.USERNAME
+                                        .maxLength,
+                                },
+                                minLength: {
+                                    message:
+                                        TextConstants.INVALID.LOGIN_PAGE
+                                            .USERNAME.minLength,
+                                    value: ValueConstants.LOGIN_PAGE.USERNAME
+                                        .minLength,
+                                },
+                                required: {
+                                    message:
+                                        TextConstants.INVALID.LOGIN_PAGE
+                                            .USERNAME.required,
+                                    value: ValueConstants.LOGIN_PAGE.USERNAME
+                                        .required,
+                                },
+                            })}
                         />
-                    </div>
-                    <div className={styles.login_page_form_layout}>
-                        <label
-                            className={styles.login_page_form_layout_label}
-                            htmlFor="password_form"
-                        >
+                        {errors.username && dirtyFields.username && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.username.message}
+                            </Form.Control.Feedback>
+                        )}
+                        {!errors.username && dirtyFields.username && (
+                            <Form.Control.Feedback type="valid">
+                                {TextConstants.VALID.LOGIN_PAGE.USERNAME}
+                            </Form.Control.Feedback>
+                        )}
+                    </Form.Group>
+                    <Form.Group controlId="formBasicPassword">
+                        <Form.Label>
                             {TextConstants.LOGIN_PAGE.PASSWORD_LABEL}
-                        </label>
-                        <input
-                            className={styles.login_page_form_layout_input}
-                            id="password_form"
-                            tabIndex={2}
-                            type="text"
+                        </Form.Label>
+                        <Form.Control
+                            isInvalid={
+                                validateObject(errors.password) &&
+                                validateObject(dirtyFields) &&
+                                dirtyFields.password
+                            }
+                            isValid={
+                                !errors.password &&
+                                validateObject(dirtyFields) &&
+                                dirtyFields.password
+                            }
+                            type="password"
+                            {...register("password", {
+                                maxLength: {
+                                    message:
+                                        TextConstants.INVALID.LOGIN_PAGE
+                                            .PASSWORD.maxLength,
+                                    value: ValueConstants.LOGIN_PAGE.PASSWORD
+                                        .maxLength,
+                                },
+                                minLength: {
+                                    message:
+                                        TextConstants.INVALID.LOGIN_PAGE
+                                            .PASSWORD.minLength,
+                                    value: ValueConstants.LOGIN_PAGE.PASSWORD
+                                        .minLength,
+                                },
+                                required: {
+                                    message:
+                                        TextConstants.INVALID.LOGIN_PAGE
+                                            .PASSWORD.required,
+                                    value: ValueConstants.LOGIN_PAGE.PASSWORD
+                                        .required,
+                                },
+                            })}
                         />
-                    </div>
+                        {errors.password && dirtyFields.password && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.password.message}
+                            </Form.Control.Feedback>
+                        )}
+                        {!errors.password && dirtyFields.password && (
+                            <Form.Control.Feedback type="valid">
+                                {TextConstants.VALID.LOGIN_PAGE.PASSWORD}
+                            </Form.Control.Feedback>
+                        )}
+                    </Form.Group>
                     <div className={styles.login_page_button_layout}>
-                        <button
-                            className={`btn_secondary ${styles.login_page_login_button}`}
-                            type="submit"
-                        >
+                        <Button type="submit" variant="outline-primary">
                             {TextConstants.LOGIN_PAGE.LOGIN_BUTTON}
-                        </button>
-                        <button
-                            className="btn_secondary"
+                        </Button>
+                        <Button
                             onClick={(): void => {
                                 navigate("/signup");
                             }}
                             type="button"
+                            variant="outline-secondary"
                         >
                             {TextConstants.LOGIN_PAGE.SIGN_UP_BUTTON}
-                        </button>
+                        </Button>
                     </div>
-                </form>
+                </Form>
             </div>
         </Layout>
     );

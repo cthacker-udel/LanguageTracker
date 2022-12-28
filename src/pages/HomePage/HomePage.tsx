@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import { TextConstants } from "../../common/constants";
@@ -20,24 +21,26 @@ export const HomePage = (): JSX.Element => {
                 {TextConstants.HOME_PAGE.DESCRIPTION}
             </div>
             <div className={styles.home_page_button_layout}>
-                <button
+                <Button
                     className={styles.home_page_login_button}
                     onClick={(): void => {
                         navigator("/login");
                     }}
                     type="button"
+                    variant="primary"
                 >
                     {TextConstants.HOME_PAGE.LOGIN_BUTTON}
-                </button>
-                <button
+                </Button>
+                <Button
                     className={styles.home_page_sign_up_button}
                     onClick={(): void => {
-                        navigator("/sign-up");
+                        navigator("/signup");
                     }}
                     type="button"
+                    variant="secondary"
                 >
                     {TextConstants.HOME_PAGE.SIGN_UP_BUTTON}
-                </button>
+                </Button>
             </div>
         </div>
     );

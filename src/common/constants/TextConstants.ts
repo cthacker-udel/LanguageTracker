@@ -1,3 +1,7 @@
+/**
+ * The text constants that encompass this entire application, contains validation text,
+ * along with general text that is displayed
+ */
 export const TextConstants = {
     HOME_PAGE: {
         DESCRIPTION:
@@ -6,11 +10,31 @@ export const TextConstants = {
         SIGN_UP_BUTTON: "Sign Up",
         TITLE: "Welcome to the Language Tracker Application!",
     },
+    INVALID: {
+        LOGIN_PAGE: {
+            PASSWORD: {
+                maxLength: "Password cannot be more than 35 characters",
+                minLength: "Password must be at least 7 characters",
+                required: "Password is required",
+            },
+            USERNAME: {
+                maxLength: "Username cannot be more than 35 characters",
+                minLength: "Username must be at least 7 characters",
+                required: "Username is required",
+            },
+        },
+    },
     LOGIN_PAGE: {
         LOGIN_BUTTON: "Login",
         PASSWORD_LABEL: "Password",
         SIGN_UP_BUTTON: "Sign Up",
         TITLE: "Login Page",
         USERNAME_LABEL: "Username",
+    },
+    VALID: {
+        LOGIN_PAGE: {
+            PASSWORD: "Password is valid!",
+            USERNAME: "Username is valid!",
+        },
     },
 };

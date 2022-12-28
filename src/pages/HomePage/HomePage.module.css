@@ -85,31 +85,15 @@
 .home_page_login_button {
     opacity: 0%;
     animation: 1s ease-in-out 4.67s forwards appear_anim;
-    background-color: transparent;
-    border: 1px solid gray;
-    border-radius: 1.5em;
     padding: 1em;
     font-size: 1em;
     cursor: pointer;
-}
-
-.home_page_login_button:hover {
-    transition: 0.25s ease-in-out background-color;
-    background-color: lightblue;
 }
 
 .home_page_sign_up_button {
     opacity: 0%;
     animation: 1s ease-in-out 4.67s forwards appear_anim;
-    background-color: transparent;
-    border: 1px solid gray;
-    border-radius: 1.5em;
     padding: 1em;
     font-size: 1em;
     cursor: pointer;
-}
-
-.home_page_sign_up_button:hover {
-    transition: 0.25s ease-in-out background-color;
-    background-color: lightblue;
 }
