@@ -6,6 +6,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { HomePage } from "./pages/HomePage";
+import { LoginPage } from "./pages/LoginPage";
 
 const root = ReactDOM.createRoot(
     // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style -- disabled
@@ -18,7 +19,7 @@ root.render(
             <Routes>
                 <Route path="*">
                     <Route element={<HomePage />} index />
-                    <Route element={<span>{"Login page"}</span>} path="login" />
+                    <Route element={<LoginPage />} path="login" />
                     <Route
                         element={<span>{"SignUp Page"}</span>}
                         path="signup"

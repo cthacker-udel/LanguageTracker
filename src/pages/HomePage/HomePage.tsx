@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { TextConstants } from "../../constants";
+import { TextConstants } from "../../common/constants";
 import styles from "./HomePage.module.css";
 
 /**
