@@ -35,8 +35,6 @@ export const SignUp = (): JSX.Element => {
     const { errors, dirtyFields, isValid, isValidating, touchedFields } =
         formState;
 
-    console.log(isValid, isValidating, dirtyFields, errors);
-
     return (
         <Layout childrenOverride={styles.sign_up_page_layout}>
             <div className={styles.sign_up_page_title}>
