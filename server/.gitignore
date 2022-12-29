@@ -3,7 +3,7 @@
 # dependencies
 /node_modules
 /secrets
-/local.env
+/.env
 /.pnp
 .pnp.js
 
