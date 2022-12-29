@@ -23,6 +23,30 @@ export const TextConstants = {
                 required: "Username is required",
             },
         },
+        SIGN_UP_PAGE: {
+            EMAIL: {
+                maxLength: "Email cannot be more than 100 characters long",
+                minLength: "Email must be at least 1 character long",
+            },
+            FIRST_NAME: {
+                maxLength: "First Name cannot be more than 35 characters long",
+                minLength: "First Name must be at least 1 character long",
+            },
+            LAST_NAME: {
+                maxLength: "Last Name cannot be more than 35 characters long",
+                minLength: "Last Name must be at least 1 character long",
+            },
+            PASSWORD: {
+                maxLength: "Password cannot be more than 35 characters long",
+                minLength: "Password must be at least 7 characters long",
+                required: "Password is required",
+            },
+            USERNAME: {
+                maxLength: "Username cannot be more than 35 characters long",
+                minLength: "Username must be at least 7 characters long",
+                required: "Username is required",
+            },
+        },
     },
     LOGIN_PAGE: {
         LOGIN_BUTTON: "Login",
@@ -31,8 +55,23 @@ export const TextConstants = {
         TITLE: "Login Page",
         USERNAME_LABEL: "Username",
     },
+    SIGN_UP_PAGE: {
+        DOB_LABEL: "Date of Birth",
+        EMAIL_LABEL: "Email",
+        FIRST_NAME_LABEL: "First Name",
+        LAST_NAME_LABEL: "Last Name",
+        TITLE: "Sign Up",
+        USERNAME_LABEL: "Username",
+    },
     VALID: {
         LOGIN_PAGE: {
+            PASSWORD: "Password is valid!",
+            USERNAME: "Username is valid!",
+        },
+        SIGN_UP_PAGE: {
+            EMAIL: "Email is valid!",
+            FIRST_NAME: "First Name is valid!",
+            LAST_NAME: "Last Name is valid!",
             PASSWORD: "Password is valid!",
             USERNAME: "Username is valid!",
         },
