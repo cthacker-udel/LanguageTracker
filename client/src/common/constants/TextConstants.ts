@@ -56,6 +56,7 @@ export const TextConstants = {
         USERNAME_LABEL: "Username",
     },
     SIGN_UP_PAGE: {
+        BACK_TO_LOGIN_BUTTON: "Back to Login",
         DOB_LABEL: "Date of Birth",
         EMAIL_LABEL: "Email",
         FIRST_NAME_LABEL: "First Name",

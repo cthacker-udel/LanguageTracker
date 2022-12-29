@@ -2,6 +2,7 @@
 import React from "react";
 import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 import { Layout, TextConstants, ValueConstants } from "../../common";
 import styles from "./SignUpPage.module.css";
@@ -19,6 +20,7 @@ type FormData = {
  * The Sign-Up form, consists of data the user can populate in their profile
  */
 export const SignUp = (): JSX.Element => {
+    const navigate = useNavigate();
     const { formState, register } = useForm<FormData>({
         defaultValues: {
             dob: new Date().toDateString(),
@@ -237,17 +239,35 @@ export const SignUp = (): JSX.Element => {
                         </Form.Control.Feedback>
                     )}
                 </Form.Group>
-                <Button
-                    disabled={
-                        !isValid ||
-                        isValidating ||
-                        !dirtyFields.password ||
-                        !dirtyFields.username
-                    }
-                    variant="secondary"
-                >
-                    {TextConstants.SIGN_UP_PAGE.SIGN_UP_BUTTON}
-                </Button>
+                <div className={`${styles.sign_up_page_button_bar}`}>
+                    <Button
+                        disabled={
+                            !isValid ||
+                            isValidating ||
+                            !dirtyFields.password ||
+                            !dirtyFields.username
+                        }
+                        type="submit"
+                        variant={
+                            !isValid ||
+                            isValidating ||
+                            !dirtyFields.password ||
+                            !dirtyFields.username
+                                ? "secondary"
+                                : "success"
+                        }
+                    >
+                        {TextConstants.SIGN_UP_PAGE.SIGN_UP_BUTTON}
+                    </Button>
+                    <Button
+                        onClick={(): void => {
+                            navigate("/login");
+                        }}
+                        variant="outline-primary"
+                    >
+                        {TextConstants.SIGN_UP_PAGE.BACK_TO_LOGIN_BUTTON}
+                    </Button>
+                </div>
             </Form>
         </Layout>
     );
