@@ -60,6 +60,7 @@ export const TextConstants = {
         EMAIL_LABEL: "Email",
         FIRST_NAME_LABEL: "First Name",
         LAST_NAME_LABEL: "Last Name",
+        PASSWORD_LABEL: "Password",
         TITLE: "Sign Up",
         USERNAME_LABEL: "Username",
     },
