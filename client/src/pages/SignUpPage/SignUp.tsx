@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/indent -- disabled */
 import React from "react";
-import { Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
 import { Layout, TextConstants, ValueConstants } from "../../common";
@@ -31,7 +32,10 @@ export const SignUp = (): JSX.Element => {
         reValidateMode: "onBlur",
     });
 
-    const { errors, dirtyFields, touchedFields } = formState;
+    const { errors, dirtyFields, isValid, isValidating, touchedFields } =
+        formState;
+
+    console.log(isValid, isValidating, dirtyFields, errors);
 
     return (
         <Layout childrenOverride={styles.sign_up_page_layout}>
@@ -180,11 +184,12 @@ export const SignUp = (): JSX.Element => {
                             },
                         })}
                     />
-                    {errors.username && touchedFields.username && (
-                        <Form.Control.Feedback type="invalid">
-                            {errors.username.message}
-                        </Form.Control.Feedback>
-                    )}
+                    {errors.username &&
+                        (touchedFields.username || dirtyFields.username) && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.username.message}
+                            </Form.Control.Feedback>
+                        )}
                     {!errors.username && dirtyFields.username && (
                         <Form.Control.Feedback type="valid">
                             {TextConstants.VALID.SIGN_UP_PAGE.USERNAME}
@@ -222,17 +227,29 @@ export const SignUp = (): JSX.Element => {
                             },
                         })}
                     />
-                    {errors.password && touchedFields.password && (
-                        <Form.Control.Feedback type="invalid">
-                            {errors.password.message}
-                        </Form.Control.Feedback>
-                    )}
+                    {errors.password &&
+                        (touchedFields.password || dirtyFields.password) && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.password.message}
+                            </Form.Control.Feedback>
+                        )}
                     {!errors.password && dirtyFields.password && (
                         <Form.Control.Feedback type="valid">
                             {TextConstants.VALID.SIGN_UP_PAGE.PASSWORD}
                         </Form.Control.Feedback>
                     )}
                 </Form.Group>
+                <Button
+                    disabled={
+                        !isValid ||
+                        isValidating ||
+                        !dirtyFields.password ||
+                        !dirtyFields.username
+                    }
+                    variant="secondary"
+                >
+                    {TextConstants.SIGN_UP_PAGE.SIGN_UP_BUTTON}
+                </Button>
             </Form>
         </Layout>
     );
