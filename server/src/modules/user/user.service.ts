@@ -1,6 +1,7 @@
 import type { User } from "@types";
 import { BaseService } from "common";
 import type { Client } from "pg";
+import { EncryptionService } from "../encryption/encryptionService";
 
 /**
  * The User Service, which controls all operations regarding users within the application
@@ -96,5 +97,27 @@ export class UserService extends BaseService {
             `SELECT first_name, last_name, dob, user_id, email from ${this.TABLE_NAME} WHERE email='${email}'`,
         );
         return result.rowCount > 0 ? result.rows[0] : undefined;
+    };
+
+    public addUser = async (client: Client, user: User): Promise<boolean> => {
+        const { firstName, lastName, dob, username, password } = user;
+
+        const generatePassword = EncryptionService.encrypt(password);
+
+        const values = [
+            username,
+            firstName === undefined ? "" : firstName,
+            lastName === undefined ? "" : lastName,
+            dob === undefined ? "" : new Date().toDateString(),
+            password,
+        ];
+
+        const result = await client.query(
+            `INSERT INTO USER (username, ${
+                firstName === undefined ? "" : "first_name,"
+            } ${lastName === undefined ? "" : "last_name,"} ${
+                dob === undefined ? "" : "dob,"
+            } password, password_salt, password_iterations, last_login, last_modified_by, last_modified_by_date, created_date) VALUES ()`,
+        );
     };
 }

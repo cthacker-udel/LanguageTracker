@@ -276,7 +276,7 @@ module.exports = {
         "array-element-newline": ["error", "consistent"],
         "block-spacing": "error",
         "brace-style": "error",
-        camelcase: "error",
+        camelcase: ["error", { ignoreDestructuring: true }],
         "capitalized-comments": "error",
         "comma-dangle": ["error", "always-multiline"],
         "comma-spacing": "error",

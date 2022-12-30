@@ -1,29 +1,28 @@
-import type { RouteMapping, User } from "@types";
-import { type BaseController, updateRoutes } from "common";
+import type { Route, User } from "@types";
+import type { BaseControllerSpec } from "common";
 import { Logger } from "common/log/Logger";
-import type { Request, Response, Router } from "express";
+import type { Request, Response } from "express";
 import type { Client } from "pg";
 
-import { UserService } from "./user.service";
+import type { UserService } from "../user.service";
 
 /**
- *
+ * Houses all the get requests for the user controller
  */
-export class UserController implements BaseController {
-    public ROUTE_PREFIX = "/user";
+export class UserControllerGet implements BaseControllerSpec<UserService> {
+    public service: UserService;
 
     public client: Client;
 
-    public userService: UserService;
-
     /**
-     * One-arg constructor for user controller to execute sql queries
+     * Constructs a UserControllerGet instance given the postgres client and the user service
      *
-     * @param _client - The PSql client we are passing into the constructor in order to utilize sql operations
+     * @param _client - The postgres client
+     * @param userService - The user service
      */
-    public constructor(_client: Client) {
+    public constructor(_client: Client, _service: UserService) {
         this.client = _client;
-        this.userService = new UserService();
+        this.service = _service;
     }
 
     /**
@@ -43,7 +42,7 @@ export class UserController implements BaseController {
                 response.send("Must supply username with request to find user");
             } else {
                 const foundUser: Partial<User> | undefined =
-                    await this.userService.findUserByUsername(
+                    await this.service.findUserByUsername(
                         this.client,
                         username as string,
                     );
@@ -81,7 +80,7 @@ export class UserController implements BaseController {
                 );
             } else {
                 const foundUser: Partial<User[]> | undefined =
-                    await this.userService.findUsersByFirstName(
+                    await this.service.findUsersByFirstName(
                         this.client,
                         firstName as string,
                     );
@@ -117,7 +116,7 @@ export class UserController implements BaseController {
                 response.send("Must supply lastName with request to find user");
             } else {
                 const foundUser: Partial<User[]> | undefined =
-                    await this.userService.findUsersByLastName(
+                    await this.service.findUsersByLastName(
                         this.client,
                         lastName as string,
                     );
@@ -153,7 +152,7 @@ export class UserController implements BaseController {
                 response.send("Must supply email with request to find user");
             } else {
                 const foundUser: Partial<User> | undefined =
-                    await this.userService.findUserByEmail(
+                    await this.service.findUserByEmail(
                         this.client,
                         email as string,
                     );
@@ -189,7 +188,7 @@ export class UserController implements BaseController {
                 response.send("Must supply userId with request to find user");
             } else {
                 const foundUser: Partial<User> | undefined =
-                    await this.userService.findUserByUserId(
+                    await this.service.findUserByUserId(
                         this.client,
                         Number.parseInt(userId as string, 10),
                     );
@@ -208,17 +207,11 @@ export class UserController implements BaseController {
         }
     };
 
-    public getRouteMapping = (): RouteMapping => ({
-        get: [
-            ["findByUsername", this.findUserByUsername],
-            ["findByFirstName", this.findUserByFirstName],
-            ["findByLastName", this.findUserByLastName],
-            ["findByEmail", this.findUserByEmail],
-            ["findByUserId", this.findUserByUserId],
-        ],
-    });
-
-    public addRoutes = (_router: Router): void => {
-        updateRoutes(_router, this.getRouteMapping(), this.ROUTE_PREFIX);
-    };
+    public getRoutes = (): Route[] => [
+        ["findByUsername", this.findUserByUsername],
+        ["findByFirstName", this.findUserByFirstName],
+        ["findByLastName", this.findUserByLastName],
+        ["findByEmail", this.findUserByEmail],
+        ["findByUserId", this.findUserByUserId],
+    ];
 }
