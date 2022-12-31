@@ -46,7 +46,7 @@ export class UserControllerPost implements BaseControllerSpec<UserService> {
             } else {
                 const addResult = await this.service.addUser(
                     this.client,
-                    request.body as Partial<User>,
+                    request.body as User,
                 );
                 if (addResult) {
                     response.status(204);

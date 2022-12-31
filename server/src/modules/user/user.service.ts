@@ -102,14 +102,18 @@ export class UserService extends BaseService {
     public addUser = async (client: Client, user: User): Promise<boolean> => {
         const { firstName, lastName, dob, username, password } = user;
 
-        const generatePassword = EncryptionService.encrypt(password);
+        const { hashResult, ...rest } = EncryptionService.encrypt(password);
 
         const values = [
             username,
             firstName === undefined ? "" : firstName,
             lastName === undefined ? "" : lastName,
             dob === undefined ? "" : new Date().toDateString(),
-            password,
+            hashResult,
+            new Date().toDateString(),
+            new Date().toDateString(),
+            new Date().toDateString(),
+            new Date().toDateString(),
         ];
 
         const result = await client.query(
@@ -117,7 +121,9 @@ export class UserService extends BaseService {
                 firstName === undefined ? "" : "first_name,"
             } ${lastName === undefined ? "" : "last_name,"} ${
                 dob === undefined ? "" : "dob,"
-            } password, password_salt, password_iterations, last_login, last_modified_by, last_modified_by_date, created_date) VALUES ()`,
+            } password, last_login, last_modified_by, last_modified_by_date, created_date) VALUES (${values.join(
+                ", ",
+            )})`,
         );
     };
 }
