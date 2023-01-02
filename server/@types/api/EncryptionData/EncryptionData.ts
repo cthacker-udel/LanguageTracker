@@ -6,5 +6,6 @@ export type EncryptionData = {
     sha_salt: string;
     sha_iterations: number;
     caesar_rotations: number;
-    hash_result: string;
+    caesar_iterations: number;
+    hash_result?: string;
 };

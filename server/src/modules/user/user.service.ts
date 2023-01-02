@@ -164,7 +164,7 @@ export class UserService extends BaseService {
             const foundRow = await this.findUserByUsername(client, username);
             if (foundRow !== undefined) {
                 const { user_id } = foundRow;
-                const encryptionQuery = `INSERT INTO "ENCRYPTION_DATA" (user_id, caesar_rotations, pbkdf2_iterations, pbkdf2_salt, sha_iterations, sha_salt) VALUES (${user_id}, ${Object.values(
+                const encryptionQuery = `INSERT INTO "ENCRYPTION_DATA" (user_id, caesar_iterations, caesar_rotations, pbkdf2_iterations, pbkdf2_salt, sha_iterations, sha_salt) VALUES (${user_id}, ${Object.values(
                     _rest,
                 )
                     .map((eachValue) => `'${eachValue}'`)
@@ -189,6 +189,56 @@ export class UserService extends BaseService {
     };
 
     /**
+     * Attempts to log the user in
+     *
+     * @param client - The postgres sql client
+     * @param username - The username we are attempting to login
+     * @param password - The password the user supplied
+     */
+    public login = async (
+        client: Client,
+        username: string,
+        password: string,
+    ): Promise<boolean> => {
+        const doesUsernameExist = await this.doesUserExist(client, username);
+        if (!doesUsernameExist) {
+            return false;
+        }
+        const foundUser = await this.findUserByUsernameWithPassword(
+            client,
+            username,
+        );
+        const userEncryptionInformation = await this.findUserEncryptionData(
+            client,
+            foundUser?.user_id,
+        );
+
+        const {
+            pbkdf2_salt,
+            pbkdf2_iterations,
+            sha_salt,
+            sha_iterations,
+            caesar_iterations,
+            caesar_rotations,
+        } = userEncryptionInformation as EncryptionData;
+
+        const encryptedPassword = EncryptionService.fixedEncryption(
+            password,
+            pbkdf2_salt,
+            pbkdf2_iterations,
+            sha_salt,
+            sha_iterations,
+            caesar_rotations,
+            caesar_iterations,
+        );
+
+        return (
+            foundUser?.password === encryptedPassword &&
+            foundUser.username === username
+        );
+    };
+
+    /**
      * Finds the encryption data associated with the user
      *
      * @param client - The client we are using to execute the query to find the encryption data
@@ -200,10 +250,27 @@ export class UserService extends BaseService {
         user_id: number | undefined,
     ): Promise<Partial<EncryptionData | undefined>> => {
         if (user_id !== undefined) {
-            const query = `SELECT encryption_id, user_id, pbkdf2_salt, pbkdf2_iterations, sha_salt, caesar_rotations FROM "ENCRYPTION_DATA" WHERE user_id=${user_id}`;
+            const query = `SELECT encryption_id, user_id, pbkdf2_salt, pbkdf2_iterations, sha_salt, sha_iterations, caesar_rotations, caesar_iterations FROM "ENCRYPTION_DATA" WHERE user_id=${user_id}`;
             const result = await client.query(query);
             return result.rows[0] as Partial<EncryptionData>;
         }
         return undefined;
+    };
+
+    /**
+     * Finds a user via the username passed in
+     *
+     * @param client - The postgres client we are utilizing to find the user
+     * @param username - The username we are searching for
+     * @returns Whether or not the user exists
+     */
+    private readonly findUserByUsernameWithPassword = async (
+        client: Client,
+        username: string,
+    ): Promise<Partial<User> | undefined> => {
+        const result = await client.query(
+            `SELECT username, first_name, last_name, dob, user_id, password, email from ${this.TABLE_NAME} WHERE username='${username}'`,
+        );
+        return result.rowCount > 0 ? result.rows[0] : undefined;
     };
 }
