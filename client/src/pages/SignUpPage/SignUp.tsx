@@ -21,7 +21,7 @@ type FormData = {
  */
 export const SignUp = (): JSX.Element => {
     const navigate = useNavigate();
-    const { formState, register } = useForm<FormData>({
+    const { formState, register, getValues } = useForm<FormData>({
         defaultValues: {
             dob: new Date().toDateString(),
             email: "",
@@ -36,6 +36,18 @@ export const SignUp = (): JSX.Element => {
 
     const { errors, dirtyFields, isValid, isValidating, touchedFields } =
         formState;
+
+    const signUp = React.useCallback(
+        (signUpValues: FormData) => {
+            const pushedValues: { [key: string]: Date | string } = {};
+            const allValues: { [key: string]: Date | string } = signUpValues;
+            for (const eachDirtyField of Object.keys(dirtyFields)) {
+                pushedValues[eachDirtyField] = allValues[eachDirtyField];
+            }
+            // TODO: make api call
+        },
+        [dirtyFields],
+    );
 
     return (
         <Layout childrenOverride={styles.sign_up_page_layout}>
@@ -247,6 +259,9 @@ export const SignUp = (): JSX.Element => {
                             !dirtyFields.password ||
                             !dirtyFields.username
                         }
+                        onClick={(): void => {
+                            signUp(getValues());
+                        }}
                         type="submit"
                         variant={
                             !isValid ||
