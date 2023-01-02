@@ -1,9 +1,9 @@
 import type { Route, User } from "@types";
-import type { BaseControllerSpec } from "common";
-import { Logger } from "common/log/Logger";
 import type { Request, Response } from "express";
 import type { Client } from "pg";
 
+import type { BaseControllerSpec } from "../../../../common";
+import { Logger } from "../../../../common/log/Logger";
 import type { UserService } from "../user.service";
 
 /**

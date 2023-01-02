@@ -1,13 +1,9 @@
 /* eslint-disable @typescript-eslint/no-extraneous-class -- disabled */
-import {
-    createCipheriv,
-    createHmac,
-    pbkdf2Sync,
-    randomBytes,
-    randomInt,
-} from "node:crypto";
+import { createHmac, pbkdf2Sync, randomBytes, randomInt } from "node:crypto";
 
 import type { EncryptionData } from "@types";
+
+import { normalizeText } from "../../../common";
 
 /**
  * Handles all encryption of the user data
@@ -18,19 +14,22 @@ export class EncryptionService {
      * @param password - The password we are encrypting
      */
     public static encrypt = (password: string): EncryptionData => {
-        const pbkdf2Salt: string = randomBytes(128).toString();
+        const pbkdf2Salt: string = normalizeText(
+            randomBytes(32).toString("ascii"),
+        );
         const pbkdf2Iterations: number = randomInt(1, 1000);
-        const shaSalt: string = randomBytes(128).toString();
+        const shaSalt: string = normalizeText(
+            randomBytes(32).toString("ascii"),
+        );
         const shaIterations: number = randomInt(1, 1000);
         const caesarRotations: number = randomInt(1, 1000);
         const caesarIterations: number = randomInt(1, 1000);
-        const aesSalt: string = randomBytes(128).toString();
 
         let hashResult = pbkdf2Sync(
             password,
             pbkdf2Salt,
             pbkdf2Iterations,
-            128,
+            32,
             "sha512",
         ).toString("hex");
 
@@ -42,26 +41,22 @@ export class EncryptionService {
 
         for (let iter = 0; iter < caesarIterations; iter += 1) {
             hashResult = [...hashResult]
-                .map(
-                    (eachLetter: string) =>
+                .map((eachLetter: string) =>
+                    String.fromCodePoint(
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- disabled
                         (eachLetter.codePointAt(0)! + caesarRotations) % 65_535,
+                    ),
                 )
                 .join("");
         }
 
-        const aesCipher = createCipheriv("aes-128-ocb", hashResult, aesSalt);
-
-        hashResult = aesCipher.update(hashResult, "hex", "hex");
-
         const encryptionResult: EncryptionData = {
-            aesSalt,
-            caesarRotations,
-            hashResult,
-            pbkdf2Iterations,
-            pbkdf2Salt,
-            shaIterations,
-            shaSalt,
+            caesar_rotations: caesarRotations,
+            hash_result: hashResult,
+            pbkdf2_iterations: pbkdf2Iterations,
+            pbkdf2_salt: pbkdf2Salt,
+            sha_iterations: shaIterations,
+            sha_salt: shaSalt,
         };
 
         return encryptionResult;

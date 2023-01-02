@@ -73,7 +73,10 @@ class LanguageTrackerApplication {
      * Adds the controller to the application
      */
     public addController = (): void => {
-        this.app.use("/api", new AppController().getRouter());
+        this.app.use(
+            "/api",
+            new AppController(this.postgresClient).getRouter(),
+        );
     };
 }
 

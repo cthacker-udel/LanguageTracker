@@ -1,11 +1,10 @@
 export type EncryptionData = {
-    encryptionId?: number;
-    userId?: number;
-    pbkdf2Salt: string;
-    pbkdf2Iterations: number;
-    shaSalt: string;
-    shaIterations: number;
-    caesarRotations: number;
-    aesSalt: string;
-    hashResult: string;
+    encryption_id?: number;
+    user_id?: number;
+    pbkdf2_salt: string;
+    pbkdf2_iterations: number;
+    sha_salt: string;
+    sha_iterations: number;
+    caesar_rotations: number;
+    hash_result: string;
 };

@@ -10,6 +10,6 @@ export class BaseService {
      * @param tableName - The name of the table we are accessing
      */
     public constructor(tableName: string) {
-        this.TABLE_NAME = tableName;
+        this.TABLE_NAME = `"${tableName}"`;
     }
 }
