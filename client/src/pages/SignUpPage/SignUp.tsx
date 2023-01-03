@@ -48,12 +48,10 @@ export const SignUp = (): JSX.Element => {
             const result = await ServerSideApi.post<Response>("/user/addUser", {
                 ...pushedValues,
             });
-            console.log("result =", result);
             if (result.status === 204) {
-                console.log("Success!");
                 navigate("/login");
             } else {
-                console.log("failure!");
+                console.log("Failure!");
             }
         },
         [dirtyFields, navigate],
