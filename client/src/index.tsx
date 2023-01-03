@@ -7,6 +7,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { SWRConfig } from "swr";
 
+import { Dashboard } from "./pages/Dashboard";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { SignUp } from "./pages/SignUpPage";
@@ -25,6 +26,7 @@ root.render(
                         <Route element={<HomePage />} index />
                         <Route element={<LoginPage />} path="login" />
                         <Route element={<SignUp />} path="signup" />
+                        <Route element={<Dashboard />} path="dashboard" />
                     </Route>
                 </Routes>
             </BrowserRouter>
