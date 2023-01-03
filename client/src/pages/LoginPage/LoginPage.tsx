@@ -32,7 +32,7 @@ export const LoginPage = (): JSX.Element => {
         reValidateMode: "onBlur",
     });
 
-    const { errors, dirtyFields } = formState;
+    const { errors, dirtyFields, isValid } = formState;
 
     return (
         <Layout>
@@ -40,7 +40,25 @@ export const LoginPage = (): JSX.Element => {
                 <div className={styles.login_page_title}>
                     {TextConstants.LOGIN_PAGE.TITLE}
                 </div>
-                <Form className={styles.login_form}>
+                <Form
+                    className={styles.login_form}
+                    onKeyDown={async (
+                        event: React.KeyboardEvent<HTMLFormElement>,
+                        // eslint-disable-next-line require-await, @typescript-eslint/require-await -- disabled
+                    ): Promise<void> => {
+                        if (event.key === "Enter" && isValid) {
+                            const response = await ServerSideApi.post<Response>(
+                                "/user/login",
+                                { ...getValues() },
+                            );
+                            if (response.status === 204) {
+                                navigate("/dashboard");
+                            } else {
+                                console.log("Failed!");
+                            }
+                        }
+                    }}
+                >
                     <Form.Group controlId="formBasicUsername">
                         <Form.Label>
                             {TextConstants.LOGIN_PAGE.USERNAME_LABEL}
@@ -145,6 +163,10 @@ export const LoginPage = (): JSX.Element => {
                     </Form.Group>
                     <div className={styles.login_page_button_layout}>
                         <Button
+                            disabled={
+                                Object.keys(dirtyFields).length < 2 ||
+                                Object.keys(errors).length > 0
+                            }
                             onClick={async (): Promise<void> => {
                                 const response =
                                     await ServerSideApi.post<Response>(

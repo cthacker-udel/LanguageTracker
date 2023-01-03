@@ -11,6 +11,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { SignUp } from "./pages/SignUpPage";
+import { NotificationProvider } from "./provider/notification/NotificationProvider";
 
 const root = ReactDOM.createRoot(
     // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style -- disabled
@@ -21,14 +22,16 @@ root.render(
     <React.StrictMode>
         <SWRConfig value={{ provider: (): Map<any, any> => new Map() }}>
             <BrowserRouter>
-                <Routes>
-                    <Route path="*">
-                        <Route element={<HomePage />} index />
-                        <Route element={<LoginPage />} path="login" />
-                        <Route element={<SignUp />} path="signup" />
-                        <Route element={<Dashboard />} path="dashboard" />
-                    </Route>
-                </Routes>
+                <NotificationProvider>
+                    <Routes>
+                        <Route path="*">
+                            <Route element={<HomePage />} index />
+                            <Route element={<LoginPage />} path="login" />
+                            <Route element={<SignUp />} path="signup" />
+                            <Route element={<Dashboard />} path="dashboard" />
+                        </Route>
+                    </Routes>
+                </NotificationProvider>
             </BrowserRouter>
         </SWRConfig>
     </React.StrictMode>,
