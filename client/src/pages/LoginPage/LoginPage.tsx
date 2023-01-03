@@ -146,12 +146,12 @@ export const LoginPage = (): JSX.Element => {
                     <div className={styles.login_page_button_layout}>
                         <Button
                             onClick={async (): Promise<void> => {
-                                const result =
-                                    await ServerSideApi.post<boolean>(
+                                const response =
+                                    await ServerSideApi.post<Response>(
                                         "/user/login",
                                         { ...getValues() },
                                     );
-                                if (result) {
+                                if (response.status === 204) {
                                     navigate("/dashboard");
                                 } else {
                                     console.log("Failed!");
