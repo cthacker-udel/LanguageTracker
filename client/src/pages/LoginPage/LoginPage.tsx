@@ -52,7 +52,9 @@ export const LoginPage = (): JSX.Element => {
                                 { ...getValues() },
                             );
                             if (response.status === 204) {
-                                navigate("/dashboard");
+                                navigate("/dashboard", {
+                                    state: { firstTime: true },
+                                });
                             } else {
                                 console.log("Failed!");
                             }
@@ -174,7 +176,9 @@ export const LoginPage = (): JSX.Element => {
                                         { ...getValues() },
                                     );
                                 if (response.status === 204) {
-                                    navigate("/dashboard");
+                                    navigate("/dashboard", {
+                                        state: { firstTime: true },
+                                    });
                                 } else {
                                     console.log("Failed!");
                                 }
