@@ -10,6 +10,7 @@ import {
     validateObject,
     ValueConstants,
 } from "../../common";
+import { ServerSideApi } from "../../common/api";
 import styles from "./LoginPage.module.css";
 
 type FormData = {
@@ -25,7 +26,7 @@ type FormData = {
 export const LoginPage = (): JSX.Element => {
     const navigate = useNavigate();
 
-    const { formState, register } = useForm<FormData>({
+    const { formState, getValues, register } = useForm<FormData>({
         defaultValues: { password: "", username: "" },
         mode: "all",
         reValidateMode: "onBlur",
@@ -143,7 +144,21 @@ export const LoginPage = (): JSX.Element => {
                         )}
                     </Form.Group>
                     <div className={styles.login_page_button_layout}>
-                        <Button type="submit" variant="outline-primary">
+                        <Button
+                            onClick={async (): Promise<void> => {
+                                const result =
+                                    await ServerSideApi.post<boolean>(
+                                        "/user/login",
+                                        { ...getValues() },
+                                    );
+                                if (result) {
+                                    navigate("/dashboard");
+                                } else {
+                                    console.log("Failed!");
+                                }
+                            }}
+                            variant="outline-primary"
+                        >
                             {TextConstants.LOGIN_PAGE.LOGIN_BUTTON}
                         </Button>
                         <Button
