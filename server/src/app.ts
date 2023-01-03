@@ -1,12 +1,12 @@
+/* eslint-disable import/no-namespace -- disabled as specific usage of this dependency requires wildcard import */
 /* eslint-disable no-console -- needed for connecting to database */
-// eslint-disable-next-line import/no-namespace -- disabled as specific usage of this dependency requires wildcard import
+import cors from "cors";
 import * as dotenv from "dotenv";
 import express from "express";
 import { Client } from "pg";
 
 import config from "./config.json";
 import { AppController } from "./controller";
-
 /**
  * Connects the postgres client, since the method to connect is async, we cannot create an async constructor, so therefore we must
  * move it outside the class into an async method
@@ -43,6 +43,7 @@ class LanguageTrackerApplication {
         dotenv.config();
         this.app = express();
         this.port = config.env === undefined ? 3001 : config.env;
+        this.app.use(cors({ methods: ["GET", "PUT", "POST"], origin: true }));
         this.app.use(express.urlencoded({ extended: false }));
         this.app.use(express.json());
         this.postgresClient = new Client();

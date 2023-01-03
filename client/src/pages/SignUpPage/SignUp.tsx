@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { Layout, TextConstants, ValueConstants } from "../../common";
+import { ServerSideApi } from "../../common/api";
 import styles from "./SignUpPage.module.css";
 
 type FormData = {
@@ -38,15 +39,24 @@ export const SignUp = (): JSX.Element => {
         formState;
 
     const signUp = React.useCallback(
-        (signUpValues: FormData) => {
+        async (signUpValues: FormData) => {
             const pushedValues: { [key: string]: Date | string } = {};
             const allValues: { [key: string]: Date | string } = signUpValues;
             for (const eachDirtyField of Object.keys(dirtyFields)) {
                 pushedValues[eachDirtyField] = allValues[eachDirtyField];
             }
-            // TODO: make api call
+            const result = await ServerSideApi.post<Response>("/user/addUser", {
+                ...pushedValues,
+            });
+            console.log("result =", result);
+            if (result.status === 204) {
+                console.log("Success!");
+                navigate("/login");
+            } else {
+                console.log("failure!");
+            }
         },
-        [dirtyFields],
+        [dirtyFields, navigate],
     );
 
     return (
@@ -259,10 +269,9 @@ export const SignUp = (): JSX.Element => {
                             !dirtyFields.password ||
                             !dirtyFields.username
                         }
-                        onClick={(): void => {
-                            signUp(getValues());
+                        onClick={async (): Promise<void> => {
+                            await signUp(getValues());
                         }}
-                        type="submit"
                         variant={
                             !isValid ||
                             isValidating ||

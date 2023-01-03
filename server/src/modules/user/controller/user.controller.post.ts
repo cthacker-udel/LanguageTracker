@@ -52,14 +52,14 @@ export class UserControllerPost implements BaseControllerSpec<UserService> {
                     response.status(204);
                     response.send({});
                 } else {
-                    response.status(401);
-                    response.send(failureMessage);
+                    response.status(400);
+                    response.send({ failureMessage });
                 }
             }
         } catch (error: unknown) {
             Logger.error(failureMessage, error);
             response.status(400);
-            response.send(failureMessage);
+            response.send({ failureMessage });
         }
     };
 
@@ -72,7 +72,7 @@ export class UserControllerPost implements BaseControllerSpec<UserService> {
             const { username, password } = request.body as Partial<User>;
             if (username === undefined || password === undefined) {
                 response.status(400);
-                response.send(failureMessage);
+                response.send({ failureMessage });
             } else {
                 const loginResult = await this.service.login(
                     this.client,
@@ -84,13 +84,13 @@ export class UserControllerPost implements BaseControllerSpec<UserService> {
                     response.send({});
                 } else {
                     response.status(400);
-                    response.send(failureMessage);
+                    response.send({ failureMessage });
                 }
             }
         } catch (error: unknown) {
             Logger.error(failureMessage, error);
             response.status(400);
-            response.send(failureMessage);
+            response.send({ failureMessage });
         }
     };
 

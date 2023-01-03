@@ -6,7 +6,7 @@ import { configuration, localConfiguration } from "../../config";
  * This is a Server-Side API wrapper class
  */
 export class ServerSideApi {
-    protected static BASE_URL = "http://localhost:3001";
+    protected static BASE_URL = "http://localhost:3001/api";
 
     /**
      * Constructs an instance of the server side api
@@ -46,9 +46,9 @@ export class ServerSideApi {
                     method: "POST",
                 },
             );
-            return await response.json();
+            return response.status === 204 ? response : await response.json();
         } catch (error: unknown) {
-            console.error(`${(error as Error).stack}`);
+            console.error(`POST ERROR = ${(error as Error).stack}`);
             throw error;
         }
     };
