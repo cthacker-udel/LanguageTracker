@@ -71,7 +71,7 @@ export const Dashboard = (): JSX.Element => {
         const mainLayout: HTMLDivElement | null =
             document.querySelector("#main_layout");
         if (mainLayout !== null) {
-            mainLayout.style.backgroundColor = "#d5f1fb";
+            mainLayout.style.backgroundColor = "#16171b";
         }
 
         return () => {

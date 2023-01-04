@@ -1,6 +1,7 @@
 .dashboard_title {
     font-size: 2.5em;
     text-align: center;
+    color: white;
 }
 
 .dashboard_content {
@@ -31,7 +32,7 @@
 */
 
 .programming_problems {
-    border: 1px solid rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 1em;
     display: flex;
     flex-direction: row;
@@ -43,6 +44,7 @@
     font-weight: 900;
     font-size: 1.1em;
     margin-left: 0.5em;
+    color: white;
 }
 
 .site_logo {
@@ -65,4 +67,11 @@
     margin-top: 1em;
     display: flex;
     flex-direction: row;
+    padding: 1.5em;
+    border-radius: 1em;
+    background-image: linear-gradient(
+        to right,
+        rgba(100, 116, 139, 0.5),
+        rgba(245, 158, 11, 0.15)
+    );
 }
