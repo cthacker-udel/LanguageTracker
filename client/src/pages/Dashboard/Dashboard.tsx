@@ -1,7 +1,6 @@
-/* eslint-disable react/jsx-sort-props -- disabled */
-/* eslint-disable no-unused-vars -- disabled */
 import React from "react";
-import { Image } from "react-bootstrap";
+import { Button, Image, OverlayTrigger } from "react-bootstrap";
+import type { OverlayTriggerRenderProps } from "react-bootstrap/esm/OverlayTrigger";
 import {
     Area,
     AreaChart,
@@ -9,19 +8,34 @@ import {
     CartesianGrid,
     ComposedChart,
     Legend,
-    Line,
     ResponsiveContainer,
     Tooltip,
     XAxis,
     YAxis,
 } from "recharts";
 
+import { renderTooltip } from "../../common/helpers/renderTooltip";
 import codewarsLogo from "./codewarslogo.svg";
 import styles from "./Dashboard.module.css";
-import dashboardBackground from "./dashboardbg.gif";
 import edabitLogo from "./edabitlogo.png";
 import languagesGif from "./languages.gif";
 import leetcodeLogo from "./leetcodelogo.png";
+
+type DashboardOverlays = {
+    codewars: boolean;
+    edabit: boolean;
+    languages: boolean;
+    leetcode: boolean;
+};
+
+type DashboardOverlayKeys = "codewars" | "edabit" | "languages" | "leetcode";
+
+const initialOverlays: DashboardOverlays = {
+    codewars: false,
+    edabit: false,
+    languages: false,
+    leetcode: false,
+};
 
 /**
  * Dashboard component
@@ -29,24 +43,40 @@ import leetcodeLogo from "./leetcodelogo.png";
  * @returns Dashboard component, which houses all the logic for starting your account in the language tracker
  */
 export const Dashboard = (): JSX.Element => {
+    // eslint-disable-next-line no-unused-vars -- disabled
+    const [overlays, setOverlays] =
+        React.useState<DashboardOverlays>(initialOverlays);
+
+    /**
+     * Creates the add button that displays when the user hovers over the language
+     *
+     * @param link - The link we are navigating to when the user clicks the button
+     * @returns The add button
+     */
+    const createAddButton = React.useCallback(
+        (key: DashboardOverlayKeys): JSX.Element => (
+            <Button
+                onClick={(): void => {
+                    overlays[key] = true;
+                }}
+                variant="outline-primary"
+            >
+                <i className="fa-solid fa-plus" />
+            </Button>
+        ),
+        [overlays],
+    );
+
     React.useEffect(() => {
         const mainLayout: HTMLDivElement | null =
             document.querySelector("#main_layout");
         if (mainLayout !== null) {
-            mainLayout.style.backgroundImage = `url(${dashboardBackground})`;
-            mainLayout.style.backgroundSize = "cover";
-            mainLayout.style.backgroundBlendMode = "lighten";
-            mainLayout.style.backgroundColor = "rgba(255, 255, 255, 0.33)";
-            mainLayout.style.backgroundRepeat = "repeat-y";
+            mainLayout.style.backgroundColor = "#d5f1fb";
         }
 
         return () => {
             if (mainLayout !== null) {
-                mainLayout.style.backgroundImage = "";
-                mainLayout.style.backgroundSize = "";
-                mainLayout.style.backgroundBlendMode = "";
                 mainLayout.style.backgroundColor = "";
-                mainLayout.style.backgroundRepeat = "";
             }
         };
     }, []);
@@ -103,26 +133,41 @@ export const Dashboard = (): JSX.Element => {
             </div>
             <div className={styles.dashboard_content}>
                 <div className={styles.programming_section}>
-                    <div className={styles.programming_problems}>
-                        <div
-                            className={
-                                styles.programming_problems_logo_container
-                            }
-                        >
-                            <Image
-                                className={styles.site_logo}
-                                src={codewarsLogo}
-                            />
+                    <OverlayTrigger
+                        delay={{ hide: 1000, show: 250 }}
+                        overlay={(
+                            properties: OverlayTriggerRenderProps,
+                        ): JSX.Element =>
+                            renderTooltip(
+                                properties,
+                                createAddButton("codewars"),
+                            )
+                        }
+                        placement="right"
+                    >
+                        <div className={styles.programming_problems}>
+                            <div
+                                className={
+                                    styles.programming_problems_logo_container
+                                }
+                            >
+                                <Image
+                                    className={styles.site_logo}
+                                    src={codewarsLogo}
+                                />
+                            </div>
+                            <span
+                                className={styles.programming_problems_solved}
+                            >
+                                {"Codewars"}
+                            </span>
                         </div>
-                        <span className={styles.programming_problems_solved}>
-                            {"Codewars"}
-                        </span>
-                    </div>
+                    </OverlayTrigger>
                     <div className={styles.programming_problems_graphs}>
                         <ResponsiveContainer
                             height="100%"
-                            width="50%"
                             minHeight={undefined}
+                            width="50%"
                         >
                             <AreaChart
                                 data={chartData}
@@ -139,23 +184,23 @@ export const Dashboard = (): JSX.Element => {
                                 />
                                 <Tooltip />
                                 <Area
-                                    type="monotone"
                                     dataKey="totalTime"
-                                    stroke="#8884d8"
-                                    fillOpacity={1}
                                     fill="rgba(0, 0, 0, .25)"
+                                    fillOpacity={1}
+                                    stroke="#8884d8"
+                                    type="monotone"
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
                         <ResponsiveContainer
                             height="100%"
-                            width="50%"
                             minHeight={undefined}
+                            width="50%"
                         >
                             <ComposedChart
-                                width={700}
-                                height={250}
                                 data={chartData}
+                                height={250}
+                                width={700}
                             >
                                 <XAxis dataKey="day" />
                                 <YAxis />
@@ -163,14 +208,14 @@ export const Dashboard = (): JSX.Element => {
                                 <Legend />
                                 <CartesianGrid stroke="#f5f5f5" />
                                 <Area
-                                    type="monotone"
                                     dataKey="averageTime"
                                     fill="#8884d8"
                                     stroke="#8884d8"
+                                    type="monotone"
                                 />
                                 <Bar
-                                    dataKey="numberProblems"
                                     barSize={20}
+                                    dataKey="numberProblems"
                                     fill="#413ea0"
                                 />
                             </ComposedChart>
@@ -178,26 +223,38 @@ export const Dashboard = (): JSX.Element => {
                     </div>
                 </div>
                 <div className={styles.programming_section}>
-                    <div className={styles.programming_problems}>
-                        <div
-                            className={
-                                styles.programming_problems_logo_container
-                            }
-                        >
-                            <Image
-                                className={styles.site_logo}
-                                src={edabitLogo}
-                            />
+                    <OverlayTrigger
+                        delay={{ hide: 1000, show: 250 }}
+                        overlay={(
+                            properties: OverlayTriggerRenderProps,
+                        ): JSX.Element =>
+                            renderTooltip(properties, createAddButton("edabit"))
+                        }
+                        placement="right"
+                    >
+                        <div className={styles.programming_problems}>
+                            <div
+                                className={
+                                    styles.programming_problems_logo_container
+                                }
+                            >
+                                <Image
+                                    className={styles.site_logo}
+                                    src={edabitLogo}
+                                />
+                            </div>
+                            <span
+                                className={styles.programming_problems_solved}
+                            >
+                                {"Edabit"}
+                            </span>
                         </div>
-                        <span className={styles.programming_problems_solved}>
-                            {"Edabit"}
-                        </span>
-                    </div>
+                    </OverlayTrigger>
                     <div className={styles.programming_problems_graphs}>
                         <ResponsiveContainer
                             height="100%"
-                            width="50%"
                             minHeight={undefined}
+                            width="50%"
                         >
                             <AreaChart
                                 data={chartData}
@@ -214,23 +271,23 @@ export const Dashboard = (): JSX.Element => {
                                 />
                                 <Tooltip />
                                 <Area
-                                    type="monotone"
                                     dataKey="totalTime"
-                                    stroke="#8884d8"
-                                    fillOpacity={1}
                                     fill="rgba(0, 0, 0, .25)"
+                                    fillOpacity={1}
+                                    stroke="#8884d8"
+                                    type="monotone"
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
                         <ResponsiveContainer
                             height="100%"
-                            width="50%"
                             minHeight={undefined}
+                            width="50%"
                         >
                             <ComposedChart
-                                width={700}
-                                height={250}
                                 data={chartData}
+                                height={250}
+                                width={700}
                             >
                                 <XAxis dataKey="day" />
                                 <YAxis />
@@ -238,14 +295,14 @@ export const Dashboard = (): JSX.Element => {
                                 <Legend />
                                 <CartesianGrid stroke="#f5f5f5" />
                                 <Area
-                                    type="monotone"
                                     dataKey="averageTime"
                                     fill="#8884d8"
                                     stroke="#8884d8"
+                                    type="monotone"
                                 />
                                 <Bar
-                                    dataKey="numberProblems"
                                     barSize={20}
+                                    dataKey="numberProblems"
                                     fill="#413ea0"
                                 />
                             </ComposedChart>
@@ -253,26 +310,41 @@ export const Dashboard = (): JSX.Element => {
                     </div>
                 </div>
                 <div className={styles.programming_section}>
-                    <div className={styles.programming_problems}>
-                        <div
-                            className={
-                                styles.programming_problems_logo_container
-                            }
-                        >
-                            <Image
-                                className={styles.site_logo}
-                                src={leetcodeLogo}
-                            />
+                    <OverlayTrigger
+                        delay={{ hide: 1000, show: 250 }}
+                        overlay={(
+                            properties: OverlayTriggerRenderProps,
+                        ): JSX.Element =>
+                            renderTooltip(
+                                properties,
+                                createAddButton("leetcode"),
+                            )
+                        }
+                        placement="right"
+                    >
+                        <div className={styles.programming_problems}>
+                            <div
+                                className={
+                                    styles.programming_problems_logo_container
+                                }
+                            >
+                                <Image
+                                    className={styles.site_logo}
+                                    src={leetcodeLogo}
+                                />
+                            </div>
+                            <span
+                                className={styles.programming_problems_solved}
+                            >
+                                {"Leetcode"}
+                            </span>
                         </div>
-                        <span className={styles.programming_problems_solved}>
-                            {"Leetcode"}
-                        </span>
-                    </div>
+                    </OverlayTrigger>
                     <div className={styles.programming_problems_graphs}>
                         <ResponsiveContainer
                             height="100%"
-                            width="50%"
                             minHeight={undefined}
+                            width="50%"
                         >
                             <AreaChart
                                 data={chartData}
@@ -289,23 +361,23 @@ export const Dashboard = (): JSX.Element => {
                                 />
                                 <Tooltip />
                                 <Area
-                                    type="monotone"
                                     dataKey="totalTime"
-                                    stroke="#8884d8"
-                                    fillOpacity={1}
                                     fill="rgba(0, 0, 0, .25)"
+                                    fillOpacity={1}
+                                    stroke="#8884d8"
+                                    type="monotone"
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
                         <ResponsiveContainer
                             height="100%"
-                            width="50%"
                             minHeight={undefined}
+                            width="50%"
                         >
                             <ComposedChart
-                                width={700}
-                                height={250}
                                 data={chartData}
+                                height={250}
+                                width={700}
                             >
                                 <XAxis dataKey="day" />
                                 <YAxis />
@@ -313,14 +385,14 @@ export const Dashboard = (): JSX.Element => {
                                 <Legend />
                                 <CartesianGrid stroke="#f5f5f5" />
                                 <Area
-                                    type="monotone"
                                     dataKey="averageTime"
                                     fill="#8884d8"
                                     stroke="#8884d8"
+                                    type="monotone"
                                 />
                                 <Bar
-                                    dataKey="numberProblems"
                                     barSize={20}
+                                    dataKey="numberProblems"
                                     fill="#413ea0"
                                 />
                             </ComposedChart>
@@ -328,26 +400,41 @@ export const Dashboard = (): JSX.Element => {
                     </div>
                 </div>
                 <div className={styles.programming_section}>
-                    <div className={styles.programming_problems}>
-                        <div
-                            className={
-                                styles.programming_problems_logo_container
-                            }
-                        >
-                            <Image
-                                className={styles.site_logo}
-                                src={languagesGif}
-                            />
+                    <OverlayTrigger
+                        delay={{ hide: 1000, show: 250 }}
+                        overlay={(
+                            properties: OverlayTriggerRenderProps,
+                        ): JSX.Element =>
+                            renderTooltip(
+                                properties,
+                                createAddButton("leetcode"),
+                            )
+                        }
+                        placement="right"
+                    >
+                        <div className={styles.programming_problems}>
+                            <div
+                                className={
+                                    styles.programming_problems_logo_container
+                                }
+                            >
+                                <Image
+                                    className={styles.site_logo}
+                                    src={languagesGif}
+                                />
+                            </div>
+                            <span
+                                className={styles.programming_problems_solved}
+                            >
+                                {"Languages"}
+                            </span>
                         </div>
-                        <span className={styles.programming_problems_solved}>
-                            {"Languages"}
-                        </span>
-                    </div>
+                    </OverlayTrigger>
                     <div className={styles.programming_problems_graphs}>
                         <ResponsiveContainer
                             height="100%"
-                            width="50%"
                             minHeight={undefined}
+                            width="50%"
                         >
                             <AreaChart
                                 data={chartData}
@@ -364,23 +451,23 @@ export const Dashboard = (): JSX.Element => {
                                 />
                                 <Tooltip />
                                 <Area
-                                    type="monotone"
                                     dataKey="totalTime"
-                                    stroke="#8884d8"
-                                    fillOpacity={1}
                                     fill="rgba(0, 0, 0, .25)"
+                                    fillOpacity={1}
+                                    stroke="#8884d8"
+                                    type="monotone"
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
                         <ResponsiveContainer
                             height="100%"
-                            width="50%"
                             minHeight={undefined}
+                            width="50%"
                         >
                             <ComposedChart
-                                width={700}
-                                height={250}
                                 data={chartData}
+                                height={250}
+                                width={700}
                             >
                                 <XAxis dataKey="day" />
                                 <YAxis />
@@ -388,14 +475,14 @@ export const Dashboard = (): JSX.Element => {
                                 <Legend />
                                 <CartesianGrid stroke="#f5f5f5" />
                                 <Area
-                                    type="monotone"
                                     dataKey="averageTime"
                                     fill="#8884d8"
                                     stroke="#8884d8"
+                                    type="monotone"
                                 />
                                 <Bar
-                                    dataKey="numberProblems"
                                     barSize={20}
+                                    dataKey="numberProblems"
                                     fill="#413ea0"
                                 />
                             </ComposedChart>
