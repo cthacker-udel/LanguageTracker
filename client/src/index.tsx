@@ -7,11 +7,9 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { SWRConfig } from "swr";
 
-import { Dashboard } from "./pages/Dashboard";
-import { HomePage } from "./pages/HomePage";
-import { LoginPage } from "./pages/LoginPage";
-import { SignUp } from "./pages/SignUpPage";
-import { NotificationProvider } from "./provider/notification/NotificationProvider";
+import { AppLayout, ErrorPage } from "./common";
+import { Dashboard, HomePage, LoginPage, SignUp } from "./pages";
+import { NotificationProvider } from "./provider";
 
 const root = ReactDOM.createRoot(
     // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style -- disabled
@@ -24,11 +22,12 @@ root.render(
             <BrowserRouter>
                 <NotificationProvider>
                     <Routes>
-                        <Route path="*">
+                        <Route element={<AppLayout />} path="/">
                             <Route element={<HomePage />} index />
                             <Route element={<LoginPage />} path="login" />
                             <Route element={<SignUp />} path="signup" />
                             <Route element={<Dashboard />} path="dashboard" />
+                            <Route element={<ErrorPage />} path="*" />
                         </Route>
                     </Routes>
                 </NotificationProvider>

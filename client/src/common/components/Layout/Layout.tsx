@@ -29,7 +29,10 @@ export const Layout = ({
     topElement,
     topElementOverride,
 }: LayoutProperties): JSX.Element => (
-    <div className={`${styles.main_layout} ${mainLayoutOverride ?? ""}`}>
+    <div
+        className={`${styles.main_layout} ${mainLayoutOverride ?? ""}`}
+        id="main_layout"
+    >
         {topElement !== undefined && (
             <div
                 className={`${styles.top_element_layout} ${
