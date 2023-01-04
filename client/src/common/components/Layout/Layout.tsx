@@ -42,7 +42,10 @@ export const Layout = ({
                 {topElement}
             </div>
         )}
-        <div className={`${styles.children_layout} ${childrenOverride ?? ""}`}>
+        <div
+            className={`${styles.children_layout} ${childrenOverride ?? ""}`}
+            id="layout_children"
+        >
             {children}
         </div>
     </div>

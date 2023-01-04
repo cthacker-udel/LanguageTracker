@@ -97,7 +97,7 @@ export const Dashboard = (): JSX.Element => {
     ];
 
     return (
-        <div>
+        <>
             <div className={styles.dashboard_title}>
                 {"Language Tracker Dashboard"}
             </div>
@@ -119,7 +119,11 @@ export const Dashboard = (): JSX.Element => {
                         </span>
                     </div>
                     <div className={styles.programming_problems_graphs}>
-                        <ResponsiveContainer height="100%" width="50%">
+                        <ResponsiveContainer
+                            height="100%"
+                            width="50%"
+                            minHeight={undefined}
+                        >
                             <AreaChart
                                 data={chartData}
                                 height={250}
@@ -143,7 +147,11 @@ export const Dashboard = (): JSX.Element => {
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
-                        <ResponsiveContainer height="100%" width="50%">
+                        <ResponsiveContainer
+                            height="100%"
+                            width="50%"
+                            minHeight={undefined}
+                        >
                             <ComposedChart
                                 width={700}
                                 height={250}
@@ -186,7 +194,11 @@ export const Dashboard = (): JSX.Element => {
                         </span>
                     </div>
                     <div className={styles.programming_problems_graphs}>
-                        <ResponsiveContainer height="100%" width="50%">
+                        <ResponsiveContainer
+                            height="100%"
+                            width="50%"
+                            minHeight={undefined}
+                        >
                             <AreaChart
                                 data={chartData}
                                 height={250}
@@ -210,7 +222,11 @@ export const Dashboard = (): JSX.Element => {
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
-                        <ResponsiveContainer height="100%" width="50%">
+                        <ResponsiveContainer
+                            height="100%"
+                            width="50%"
+                            minHeight={undefined}
+                        >
                             <ComposedChart
                                 width={700}
                                 height={250}
@@ -236,7 +252,7 @@ export const Dashboard = (): JSX.Element => {
                         </ResponsiveContainer>
                     </div>
                 </div>
-                <div>
+                <div className={styles.programming_section}>
                     <div className={styles.programming_problems}>
                         <div
                             className={
@@ -253,7 +269,11 @@ export const Dashboard = (): JSX.Element => {
                         </span>
                     </div>
                     <div className={styles.programming_problems_graphs}>
-                        <ResponsiveContainer height="100%" width="50%">
+                        <ResponsiveContainer
+                            height="100%"
+                            width="50%"
+                            minHeight={undefined}
+                        >
                             <AreaChart
                                 data={chartData}
                                 height={250}
@@ -277,7 +297,11 @@ export const Dashboard = (): JSX.Element => {
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
-                        <ResponsiveContainer height="100%" width="50%">
+                        <ResponsiveContainer
+                            height="100%"
+                            width="50%"
+                            minHeight={undefined}
+                        >
                             <ComposedChart
                                 width={700}
                                 height={250}
@@ -303,7 +327,7 @@ export const Dashboard = (): JSX.Element => {
                         </ResponsiveContainer>
                     </div>
                 </div>
-                <div>
+                <div className={styles.programming_section}>
                     <div className={styles.programming_problems}>
                         <div
                             className={
@@ -320,7 +344,11 @@ export const Dashboard = (): JSX.Element => {
                         </span>
                     </div>
                     <div className={styles.programming_problems_graphs}>
-                        <ResponsiveContainer height="100%" width="50%">
+                        <ResponsiveContainer
+                            height="100%"
+                            width="50%"
+                            minHeight={undefined}
+                        >
                             <AreaChart
                                 data={chartData}
                                 height={250}
@@ -344,7 +372,11 @@ export const Dashboard = (): JSX.Element => {
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
-                        <ResponsiveContainer height="100%" width="50%">
+                        <ResponsiveContainer
+                            height="100%"
+                            width="50%"
+                            minHeight={undefined}
+                        >
                             <ComposedChart
                                 width={700}
                                 height={250}
@@ -371,6 +403,6 @@ export const Dashboard = (): JSX.Element => {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
