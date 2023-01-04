@@ -7,8 +7,9 @@ import styles from "./ErrorPage.module.css";
 import spacemanGif from "./spaceman.gif";
 
 /**
+ * The error page that displays if the user navigates to an unknown page
  *
- * @returns
+ * @returns The error page
  */
 export const ErrorPage = (): JSX.Element => {
     const navigate = useNavigate();
