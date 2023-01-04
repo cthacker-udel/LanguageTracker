@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import { TextConstants, validateObject, ValueConstants } from "../../common";
 import { ServerSideApi } from "../../common/api";
+import loginBackground from "./loginbg.gif";
 import styles from "./LoginPage.module.css";
 
 type FormData = {
@@ -29,6 +30,26 @@ export const LoginPage = (): JSX.Element => {
 
     const { errors, dirtyFields, isValid } = formState;
 
+    React.useEffect(() => {
+        const mainLayout: HTMLDivElement | null =
+            document.querySelector("#main_layout");
+        if (mainLayout !== null) {
+            mainLayout.style.backgroundImage = `url(${loginBackground})`;
+            mainLayout.style.backgroundSize = "cover";
+            mainLayout.style.backgroundBlendMode = "lighten";
+            mainLayout.style.backgroundColor = "rgba(255, 255, 255, 0.55)";
+        }
+
+        return () => {
+            if (mainLayout !== null) {
+                mainLayout.style.backgroundImage = "";
+                mainLayout.style.backgroundSize = "";
+                mainLayout.style.backgroundBlendMode = "";
+                mainLayout.style.backgroundColor = "";
+            }
+        };
+    }, []);
+
     return (
         <div className={styles.login_page_layout}>
             <div className={styles.login_page_title}>
@@ -46,9 +67,7 @@ export const LoginPage = (): JSX.Element => {
                             { ...getValues() },
                         );
                         if (response.status === 204) {
-                            navigate("/dashboard", {
-                                state: { firstTime: true },
-                            });
+                            navigate("/dashboard");
                         } else {
                             console.log("Failed!");
                         }
@@ -169,14 +188,12 @@ export const LoginPage = (): JSX.Element => {
                                 { ...getValues() },
                             );
                             if (response.status === 204) {
-                                navigate("/dashboard", {
-                                    state: { firstTime: true },
-                                });
+                                navigate("/dashboard");
                             } else {
                                 console.log("Failed!");
                             }
                         }}
-                        variant="outline-primary"
+                        variant="primary"
                     >
                         {TextConstants.LOGIN_PAGE.LOGIN_BUTTON}
                     </Button>
@@ -185,7 +202,7 @@ export const LoginPage = (): JSX.Element => {
                             navigate("/signup");
                         }}
                         type="button"
-                        variant="outline-secondary"
+                        variant="secondary"
                     >
                         {TextConstants.LOGIN_PAGE.SIGN_UP_BUTTON}
                     </Button>

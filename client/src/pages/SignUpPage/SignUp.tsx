@@ -4,8 +4,9 @@ import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-import { Layout, TextConstants, ValueConstants } from "../../common";
+import { TextConstants, ValueConstants } from "../../common";
 import { ServerSideApi } from "../../common/api";
+import signUpBackground from "./signupbg.gif";
 import styles from "./SignUpPage.module.css";
 
 type FormData = {
@@ -38,6 +39,27 @@ export const SignUp = (): JSX.Element => {
     const { errors, dirtyFields, isValid, isValidating, touchedFields } =
         formState;
 
+    React.useEffect(() => {
+        const mainLayout: HTMLDivElement | null =
+            document.querySelector("#main_layout");
+
+        if (mainLayout !== null) {
+            mainLayout.style.backgroundImage = `url(${signUpBackground})`;
+            mainLayout.style.backgroundSize = "contain";
+            mainLayout.style.backgroundBlendMode = "lighten";
+            mainLayout.style.backgroundColor = "rgba(255, 255, 255, 0.33)";
+        }
+
+        return () => {
+            if (mainLayout !== null) {
+                mainLayout.style.backgroundImage = "";
+                mainLayout.style.backgroundSize = "";
+                mainLayout.style.backgroundBlendMode = "";
+                mainLayout.style.backgroundColor = "";
+            }
+        };
+    }, []);
+
     const signUp = React.useCallback(
         async (signUpValues: FormData) => {
             const pushedValues: { [key: string]: Date | string } = {};
@@ -58,7 +80,7 @@ export const SignUp = (): JSX.Element => {
     );
 
     return (
-        <Layout childrenOverride={styles.sign_up_page_layout}>
+        <div className={styles.sign_up_page_layout}>
             <div className={styles.sign_up_page_title}>
                 {TextConstants.SIGN_UP_PAGE.TITLE}
             </div>
@@ -285,12 +307,12 @@ export const SignUp = (): JSX.Element => {
                         onClick={(): void => {
                             navigate("/login");
                         }}
-                        variant="outline-primary"
+                        variant="primary"
                     >
                         {TextConstants.SIGN_UP_PAGE.BACK_TO_LOGIN_BUTTON}
                     </Button>
                 </div>
             </Form>
-        </Layout>
+        </div>
     );
 };

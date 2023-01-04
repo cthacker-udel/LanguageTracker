@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { TextConstants } from "../../common/constants";
 import styles from "./HomePage.module.css";
+import skyBackground from "./skybg1.gif";
 
 /**
  *
@@ -11,6 +12,27 @@ import styles from "./HomePage.module.css";
  */
 export const HomePage = (): JSX.Element => {
     const navigator = useNavigate();
+
+    React.useEffect(() => {
+        const mainLayout: HTMLDivElement | null =
+            document.querySelector("#main_layout");
+
+        if (mainLayout !== null) {
+            mainLayout.style.backgroundImage = `url(${skyBackground})`;
+            mainLayout.style.backgroundSize = "cover";
+            mainLayout.style.backgroundBlendMode = "lighten";
+            mainLayout.style.backgroundColor = "rgba(255, 255, 255, 0.33)";
+        }
+
+        return () => {
+            if (mainLayout !== null) {
+                mainLayout.style.backgroundImage = "";
+                mainLayout.style.backgroundSize = "";
+                mainLayout.style.backgroundBlendMode = "";
+                mainLayout.style.backgroundColor = "";
+            }
+        };
+    }, []);
 
     return (
         <div className={styles.home_page_layout}>

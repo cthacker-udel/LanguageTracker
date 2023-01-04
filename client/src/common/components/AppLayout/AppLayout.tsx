@@ -13,7 +13,7 @@ export const AppLayout = (): JSX.Element => {
 
     return (
         <Layout>
-            <Outlet {...state} />
+            <Outlet context={{ ...state }} />
         </Layout>
     );
 };

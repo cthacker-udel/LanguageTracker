@@ -6,6 +6,7 @@
 .sign_up_page_layout {
     display: flex;
     flex-direction: column;
+    font-weight: 700;
 }
 
 .sign_up_page_form {
