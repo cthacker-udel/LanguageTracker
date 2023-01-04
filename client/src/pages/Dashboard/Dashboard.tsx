@@ -5,6 +5,7 @@ import { Image } from "react-bootstrap";
 import {
     Area,
     AreaChart,
+    Bar,
     CartesianGrid,
     ComposedChart,
     Legend,
@@ -36,6 +37,7 @@ export const Dashboard = (): JSX.Element => {
             mainLayout.style.backgroundSize = "cover";
             mainLayout.style.backgroundBlendMode = "lighten";
             mainLayout.style.backgroundColor = "rgba(255, 255, 255, 0.33)";
+            mainLayout.style.backgroundRepeat = "repeat-y";
         }
 
         return () => {
@@ -44,6 +46,7 @@ export const Dashboard = (): JSX.Element => {
                 mainLayout.style.backgroundSize = "";
                 mainLayout.style.backgroundBlendMode = "";
                 mainLayout.style.backgroundColor = "";
+                mainLayout.style.backgroundRepeat = "";
             }
         };
     }, []);
@@ -116,7 +119,7 @@ export const Dashboard = (): JSX.Element => {
                         </span>
                     </div>
                     <div className={styles.programming_problems_graphs}>
-                        <ResponsiveContainer height="100%" width={700}>
+                        <ResponsiveContainer height="100%" width="50%">
                             <AreaChart
                                 data={chartData}
                                 height={250}
@@ -140,9 +143,33 @@ export const Dashboard = (): JSX.Element => {
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
+                        <ResponsiveContainer height="100%" width="50%">
+                            <ComposedChart
+                                width={700}
+                                height={250}
+                                data={chartData}
+                            >
+                                <XAxis dataKey="day" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <CartesianGrid stroke="#f5f5f5" />
+                                <Area
+                                    type="monotone"
+                                    dataKey="averageTime"
+                                    fill="#8884d8"
+                                    stroke="#8884d8"
+                                />
+                                <Bar
+                                    dataKey="numberProblems"
+                                    barSize={20}
+                                    fill="#413ea0"
+                                />
+                            </ComposedChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
-                <div>
+                <div className={styles.programming_section}>
                     <div className={styles.programming_problems}>
                         <div
                             className={
@@ -157,6 +184,56 @@ export const Dashboard = (): JSX.Element => {
                         <span className={styles.programming_problems_solved}>
                             {"Edabit"}
                         </span>
+                    </div>
+                    <div className={styles.programming_problems_graphs}>
+                        <ResponsiveContainer height="100%" width="50%">
+                            <AreaChart
+                                data={chartData}
+                                height={250}
+                                width={500}
+                            >
+                                <XAxis dataKey="day" />
+                                <YAxis />
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <Legend
+                                    formatter={(value): string =>
+                                        `${value} (seconds)`
+                                    }
+                                />
+                                <Tooltip />
+                                <Area
+                                    type="monotone"
+                                    dataKey="totalTime"
+                                    stroke="#8884d8"
+                                    fillOpacity={1}
+                                    fill="rgba(0, 0, 0, .25)"
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                        <ResponsiveContainer height="100%" width="50%">
+                            <ComposedChart
+                                width={700}
+                                height={250}
+                                data={chartData}
+                            >
+                                <XAxis dataKey="day" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <CartesianGrid stroke="#f5f5f5" />
+                                <Area
+                                    type="monotone"
+                                    dataKey="averageTime"
+                                    fill="#8884d8"
+                                    stroke="#8884d8"
+                                />
+                                <Bar
+                                    dataKey="numberProblems"
+                                    barSize={20}
+                                    fill="#413ea0"
+                                />
+                            </ComposedChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
                 <div>
@@ -175,6 +252,56 @@ export const Dashboard = (): JSX.Element => {
                             {"Leetcode"}
                         </span>
                     </div>
+                    <div className={styles.programming_problems_graphs}>
+                        <ResponsiveContainer height="100%" width="50%">
+                            <AreaChart
+                                data={chartData}
+                                height={250}
+                                width={500}
+                            >
+                                <XAxis dataKey="day" />
+                                <YAxis />
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <Legend
+                                    formatter={(value): string =>
+                                        `${value} (seconds)`
+                                    }
+                                />
+                                <Tooltip />
+                                <Area
+                                    type="monotone"
+                                    dataKey="totalTime"
+                                    stroke="#8884d8"
+                                    fillOpacity={1}
+                                    fill="rgba(0, 0, 0, .25)"
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                        <ResponsiveContainer height="100%" width="50%">
+                            <ComposedChart
+                                width={700}
+                                height={250}
+                                data={chartData}
+                            >
+                                <XAxis dataKey="day" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <CartesianGrid stroke="#f5f5f5" />
+                                <Area
+                                    type="monotone"
+                                    dataKey="averageTime"
+                                    fill="#8884d8"
+                                    stroke="#8884d8"
+                                />
+                                <Bar
+                                    dataKey="numberProblems"
+                                    barSize={20}
+                                    fill="#413ea0"
+                                />
+                            </ComposedChart>
+                        </ResponsiveContainer>
+                    </div>
                 </div>
                 <div>
                     <div className={styles.programming_problems}>
@@ -192,20 +319,56 @@ export const Dashboard = (): JSX.Element => {
                             {"Languages"}
                         </span>
                     </div>
-                </div>
-            </div>
-            <div className={styles.dashboard_middle_content}>
-                {"Average problems completed per day"}
-            </div>
-            <div className={styles.dashboard_footer}>
-                <div className={styles.average_codewars_completed}>
-                    {"Average codewars completed"}
-                </div>
-                <div className={styles.average_edabit_completed}>
-                    {"Average edabit completed"}
-                </div>
-                <div className={styles.average_leetcode_completed}>
-                    {"Average leetcode completed"}
+                    <div className={styles.programming_problems_graphs}>
+                        <ResponsiveContainer height="100%" width="50%">
+                            <AreaChart
+                                data={chartData}
+                                height={250}
+                                width={500}
+                            >
+                                <XAxis dataKey="day" />
+                                <YAxis />
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <Legend
+                                    formatter={(value): string =>
+                                        `${value} (seconds)`
+                                    }
+                                />
+                                <Tooltip />
+                                <Area
+                                    type="monotone"
+                                    dataKey="totalTime"
+                                    stroke="#8884d8"
+                                    fillOpacity={1}
+                                    fill="rgba(0, 0, 0, .25)"
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                        <ResponsiveContainer height="100%" width="50%">
+                            <ComposedChart
+                                width={700}
+                                height={250}
+                                data={chartData}
+                            >
+                                <XAxis dataKey="day" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <CartesianGrid stroke="#f5f5f5" />
+                                <Area
+                                    type="monotone"
+                                    dataKey="averageTime"
+                                    fill="#8884d8"
+                                    stroke="#8884d8"
+                                />
+                                <Bar
+                                    dataKey="numberProblems"
+                                    barSize={20}
+                                    fill="#413ea0"
+                                />
+                            </ComposedChart>
+                        </ResponsiveContainer>
+                    </div>
                 </div>
             </div>
         </div>

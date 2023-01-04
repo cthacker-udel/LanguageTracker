@@ -55,4 +55,7 @@
 
 .programming_problems_graphs {
     height: 40vh;
+    margin-top: 1em;
+    display: flex;
+    flex-direction: row;
 }
