@@ -5,12 +5,54 @@
 
 .dashboard_content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-around;
+    gap: 1.5em;
+    margin-top: 2em;
 }
 
 .dashboard_footer {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+}
+
+/*
+    Programming problems displays
+*/
+
+.programming_problems {
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 1em;
+    display: flex;
+    flex-direction: row;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-blend-mode: lighten;
+    padding: 1em;
+}
+
+.programming_problems_solved {
+    font-weight: 900;
+    font-size: 1.1em;
+    margin-left: 0.5em;
+}
+
+.site_logo {
+    height: 1.5em;
+    width: 1.5em;
+    align-self: center;
+}
+
+.programming_problems_logo_container {
+    height: 100%;
+}
+
+.programming_section {
+    display: flex;
+    flex-direction: column;
+}
+
+.programming_problems_graphs {
+    height: 40vh;
 }
