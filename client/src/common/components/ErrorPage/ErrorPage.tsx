@@ -13,6 +13,8 @@ import spacemanGif from "./spaceman.gif";
 export const ErrorPage = (): JSX.Element => {
     const navigate = useNavigate();
 
+    const isRickRolling = Math.floor(Math.random() * 10) === 7;
+
     React.useEffect(() => {
         const mainLayout: HTMLDivElement | null =
             document.querySelector("#main_layout");
@@ -22,6 +24,15 @@ export const ErrorPage = (): JSX.Element => {
             mainLayout.style.backgroundBlendMode = "lighten";
             mainLayout.style.backgroundColor = "rgba(255, 255, 255, 0.33)";
         }
+
+        return () => {
+            if (mainLayout !== null) {
+                mainLayout.style.backgroundImage = "";
+                mainLayout.style.backgroundSize = "";
+                mainLayout.style.backgroundBlendMode = "";
+                mainLayout.style.backgroundColor = "";
+            }
+        };
     }, []);
 
     return (
@@ -35,7 +46,14 @@ export const ErrorPage = (): JSX.Element => {
             <div className={styles.error_button_bar}>
                 <Button
                     onClick={(): void => {
-                        navigate(-1);
+                        if (isRickRolling) {
+                            window.open(
+                                "https://shattereddisk.github.io/rickroll/rickroll.mp4",
+                                "_blank",
+                            );
+                        } else {
+                            navigate(-1);
+                        }
                     }}
                     variant="dark"
                 >
