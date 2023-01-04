@@ -14,7 +14,9 @@ import spacemanGif from "./spaceman.gif";
 export const ErrorPage = (): JSX.Element => {
     const navigate = useNavigate();
 
-    const isRickRolling = Math.floor(Math.random() * 10) === 7;
+    const [isRickRolling, setIsRickRolling] = React.useState<boolean>(
+        Math.floor(Math.random() * 10) === 7,
+    );
 
     React.useEffect(() => {
         const mainLayout: HTMLDivElement | null =
@@ -52,6 +54,7 @@ export const ErrorPage = (): JSX.Element => {
                                 "https://shattereddisk.github.io/rickroll/rickroll.mp4",
                                 "_blank",
                             );
+                            setIsRickRolling(false);
                         } else {
                             navigate(-1);
                         }
