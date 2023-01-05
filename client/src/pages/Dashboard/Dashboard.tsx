@@ -14,6 +14,7 @@ import {
     YAxis,
 } from "recharts";
 
+import { capitalize, ProgrammingLanguageModal } from "../../common";
 import { renderTooltip } from "../../common/helpers/renderTooltip";
 import codewarsLogo from "./codewarslogo.svg";
 import styles from "./Dashboard.module.css";
@@ -42,10 +43,44 @@ const initialOverlays: DashboardOverlays = {
  *
  * @returns Dashboard component, which houses all the logic for starting your account in the language tracker
  */
-export const Dashboard = (): JSX.Element => {
-    // eslint-disable-next-line no-unused-vars -- disabled
+const Dashboard = (): JSX.Element => {
     const [overlays, setOverlays] =
         React.useState<DashboardOverlays>(initialOverlays);
+
+    const triggerOverlay = React.useCallback(
+        (trigger: DashboardOverlayKeys) => {
+            setOverlays((oldOverlays) => {
+                oldOverlays[trigger] = !oldOverlays[trigger];
+                return { ...oldOverlays };
+            });
+        },
+        [],
+    );
+
+    const gatherValidDashboardOverlayKey = React.useCallback(() => {
+        const validEntry = (
+            Object.entries(overlays) as [DashboardOverlayKeys, boolean][]
+        ).filter((eachOverlay) => eachOverlay[1]);
+        if (validEntry.length > 0) {
+            return validEntry[0][0];
+        }
+        return undefined;
+    }, [overlays]);
+
+    const gatherImageFromValidDashboardOverlayKey = React.useCallback(() => {
+        const validKey = gatherValidDashboardOverlayKey();
+        const images = [codewarsLogo, edabitLogo, leetcodeLogo, languagesGif];
+        const indexMapping: { [key: string]: number } = {
+            codewars: 0,
+            edabit: 1,
+            languages: 3,
+            leetcode: 2,
+        };
+        if (validKey !== undefined) {
+            return images[indexMapping[validKey]];
+        }
+        return undefined;
+    }, [gatherValidDashboardOverlayKey]);
 
     /**
      * Creates the add button that displays when the user hovers over the language
@@ -57,14 +92,15 @@ export const Dashboard = (): JSX.Element => {
         (key: DashboardOverlayKeys): JSX.Element => (
             <Button
                 onClick={(): void => {
-                    overlays[key] = true;
+                    console.log("clicking");
+                    triggerOverlay(key);
                 }}
-                variant="outline-primary"
+                variant="outline-light"
             >
                 <i className="fa-solid fa-plus" />
             </Button>
         ),
-        [overlays],
+        [triggerOverlay],
     );
 
     React.useEffect(() => {
@@ -72,11 +108,13 @@ export const Dashboard = (): JSX.Element => {
             document.querySelector("#main_layout");
         if (mainLayout !== null) {
             mainLayout.style.backgroundColor = "#16171b";
+            mainLayout.style.padding = "1em";
         }
 
         return () => {
             if (mainLayout !== null) {
                 mainLayout.style.backgroundColor = "";
+                mainLayout.style.padding = "";
             }
         };
     }, []);
@@ -490,6 +528,27 @@ export const Dashboard = (): JSX.Element => {
                     </div>
                 </div>
             </div>
+            <ProgrammingLanguageModal
+                dashboardKey={gatherValidDashboardOverlayKey()}
+                display={Object.values(overlays).some(Boolean)}
+                onClose={(key: DashboardOverlayKeys | undefined): void => {
+                    console.log("firing onClose");
+                    if (key !== undefined) {
+                        triggerOverlay(key);
+                    }
+                }}
+                onSubmit={(key: DashboardOverlayKeys | undefined): void => {
+                    if (key !== undefined) {
+                        triggerOverlay(key);
+                    }
+                }}
+                programmingLanguageImage={gatherImageFromValidDashboardOverlayKey()}
+                title={`Add ${capitalize(
+                    gatherValidDashboardOverlayKey(),
+                )} Activity`}
+            />
         </>
     );
 };
+
+export { type DashboardOverlayKeys, type DashboardOverlays, Dashboard };
