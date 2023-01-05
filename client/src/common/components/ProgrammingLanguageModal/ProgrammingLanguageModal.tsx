@@ -180,7 +180,7 @@ export const ProgrammingLanguageModal = ({
                     />
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body className={styles.programming_language_modal_body}>
+            <Modal.Body>
                 <Form className={styles.programming_language_modal_form}>
                     <Form.Group controlId="activityDescription">
                         <Form.Label>{"Description"}</Form.Label>
@@ -190,6 +190,44 @@ export const ProgrammingLanguageModal = ({
                             rows={3}
                             {...register("description")}
                         />
+                    </Form.Group>
+                    <Form.Group controlId="activityLink">
+                        <Form.Label>{"Link"}</Form.Label>
+                        <InputGroup>
+                            <InputGroup.Text>
+                                <i className="fa-solid fa-link" />
+                            </InputGroup.Text>
+                            <Form.Control
+                                placeholder="Enter activity link"
+                                type="text"
+                                {...register("link")}
+                            />
+                        </InputGroup>
+                    </Form.Group>
+                    <Form.Group controlId="activityTitle">
+                        <Form.Label>{"Title"}</Form.Label>
+                        <InputGroup>
+                            <InputGroup.Text>
+                                <i className="fa-solid fa-heading" />
+                            </InputGroup.Text>
+                            <Form.Control
+                                placeholder="Enter activity title"
+                                type="text"
+                                {...register("title")}
+                            />
+                        </InputGroup>
+                    </Form.Group>
+                    <Form.Group controlId="activityTotalTime">
+                        <Form.Label>{"Total Time"}</Form.Label>
+                        <InputGroup>
+                            <InputGroup.Text>
+                                <i className="fa-solid fa-clock" />
+                            </InputGroup.Text>
+                            <Form.Control
+                                type="number"
+                                {...register("totalTime")}
+                            />
+                        </InputGroup>
                     </Form.Group>
                     <Form.Group controlId="activityLanguage">
                         <Form.Select
@@ -244,44 +282,6 @@ export const ProgrammingLanguageModal = ({
                                 ),
                             )}
                         </Form.Select>
-                    </Form.Group>
-                    <Form.Group controlId="activityLink">
-                        <Form.Label>{"Link"}</Form.Label>
-                        <InputGroup>
-                            <InputGroup.Text>
-                                <i className="fa-solid fa-link" />
-                            </InputGroup.Text>
-                            <Form.Control
-                                placeholder="Enter activity link"
-                                type="text"
-                                {...register("link")}
-                            />
-                        </InputGroup>
-                    </Form.Group>
-                    <Form.Group controlId="activityTitle">
-                        <Form.Label>{"Title"}</Form.Label>
-                        <InputGroup>
-                            <InputGroup.Text>
-                                <i className="fa-solid fa-heading" />
-                            </InputGroup.Text>
-                            <Form.Control
-                                placeholder="Enter activity title"
-                                type="text"
-                                {...register("title")}
-                            />
-                        </InputGroup>
-                    </Form.Group>
-                    <Form.Group controlId="activityTotalTime">
-                        <Form.Label>{"Total Time"}</Form.Label>
-                        <InputGroup>
-                            <InputGroup.Text>
-                                <i className="fa-solid fa-clock" />
-                            </InputGroup.Text>
-                            <Form.Control
-                                type="number"
-                                {...register("totalTime")}
-                            />
-                        </InputGroup>
                     </Form.Group>
                     <Form.Group controlId="activityTimeMeasurement">
                         <Form.Select
@@ -339,7 +339,7 @@ export const ProgrammingLanguageModal = ({
                     </Form.Group>
                 </Form>
             </Modal.Body>
-            <Modal.Footer className={styles.programming_language_modal_footer}>
+            <Modal.Footer>
                 <Button
                     onClick={(): void => {
                         if (onClose !== undefined) {

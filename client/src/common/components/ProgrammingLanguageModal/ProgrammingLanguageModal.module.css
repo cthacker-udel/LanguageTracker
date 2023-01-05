@@ -1,9 +1,3 @@
-.programming_language_modal_body {
-}
-
-.programming_language_modal_footer {
-}
-
 .programming_language_modal_image {
     height: 1.5em;
     align-self: center;
@@ -13,4 +7,10 @@
 .programming_language_modal_title {
     display: flex;
     flex-direction: row;
+}
+
+.programming_language_modal_form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
 }
