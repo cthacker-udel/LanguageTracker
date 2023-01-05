@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow -- happens with enums */
 /* eslint-disable no-unused-vars -- happens with enums */
 import React, { type ChangeEvent } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, InputGroup, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
 import {
@@ -68,6 +68,45 @@ const languageMapping: { [key: string]: ActivityLanguage } = {
     Python: ActivityLanguage.PYTHON,
     SQL: ActivityLanguage.SQL,
     Typescript: ActivityLanguage.TYPESCRIPT,
+};
+
+const levels = [
+    "Very Easy",
+    "Easy",
+    "Easy-Medium",
+    "Medium",
+    "Medium-Hard",
+    "Hard",
+    "Very Hard",
+    "Insane",
+];
+
+const levelMapping: { [key: string]: ActivityLevel } = {
+    Easy: ActivityLevel.EASY,
+    "Easy-Medium": ActivityLevel.EASYMEDIUM,
+    Hard: ActivityLevel.HARD,
+    Insane: ActivityLevel.INSANE,
+    Medium: ActivityLevel.MEDIUM,
+    "Medium-Hard": ActivityLevel.MEDIUMHARD,
+    "Very Easy": ActivityLevel.VERYEASY,
+    "Very Hard": ActivityLevel.VERYHARD,
+};
+
+const timeMeasurements = ["Seconds", "Minutes", "Hours"];
+
+const timeMeasurementMapping: { [key: string]: TimeMeasurement } = {
+    Hours: TimeMeasurement.HOURS,
+    Minutes: TimeMeasurement.MINUTES,
+    Seconds: TimeMeasurement.SECONDS,
+};
+
+const activityTypes = ["Codewars", "Edabit", "Leetcode", "Languages"];
+
+const activityTypeMapping: { [key: string]: ActivityType } = {
+    Codewars: ActivityType.CODEWARS,
+    Edabit: ActivityType.EDABIT,
+    Languages: ActivityType.LANGUAGES,
+    Leetcode: ActivityType.LEETCODE,
 };
 
 /**
@@ -147,6 +186,7 @@ export const ProgrammingLanguageModal = ({
                         <Form.Label>{"Description"}</Form.Label>
                         <Form.Control
                             as="textarea"
+                            placeholder="Enter activity description"
                             rows={3}
                             {...register("description")}
                         />
@@ -170,11 +210,131 @@ export const ProgrammingLanguageModal = ({
                             <option value="LanguageSelect">
                                 {"Select a language"}
                             </option>
-                            {languages.map((eachLanguage: string) => (
-                                <option key={eachLanguage}>
-                                    {eachLanguage}
-                                </option>
-                            ))}
+                            {languages.map(
+                                (eachLanguage: string): JSX.Element => (
+                                    <option key={eachLanguage}>
+                                        {eachLanguage}
+                                    </option>
+                                ),
+                            )}
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group controlId="activityLevel">
+                        <Form.Select
+                            onChange={(
+                                changedElement: ChangeEvent<HTMLSelectElement>,
+                            ): void => {
+                                const {
+                                    target: { value },
+                                } = changedElement;
+                                setValue(
+                                    "level",
+                                    value === "LevelSelect"
+                                        ? ActivityLevel.NONE
+                                        : levelMapping[value],
+                                );
+                            }}
+                        >
+                            <option value="LevelSelect">
+                                {"Select a Difficulty Level"}
+                            </option>
+                            {levels.map(
+                                (eachLevel: string): JSX.Element => (
+                                    <option key={eachLevel}>{eachLevel}</option>
+                                ),
+                            )}
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group controlId="activityLink">
+                        <Form.Label>{"Link"}</Form.Label>
+                        <InputGroup>
+                            <InputGroup.Text>
+                                <i className="fa-solid fa-link" />
+                            </InputGroup.Text>
+                            <Form.Control
+                                placeholder="Enter activity link"
+                                type="text"
+                                {...register("link")}
+                            />
+                        </InputGroup>
+                    </Form.Group>
+                    <Form.Group controlId="activityTitle">
+                        <Form.Label>{"Title"}</Form.Label>
+                        <InputGroup>
+                            <InputGroup.Text>
+                                <i className="fa-solid fa-heading" />
+                            </InputGroup.Text>
+                            <Form.Control
+                                placeholder="Enter activity title"
+                                type="text"
+                                {...register("title")}
+                            />
+                        </InputGroup>
+                    </Form.Group>
+                    <Form.Group controlId="activityTotalTime">
+                        <Form.Label>{"Total Time"}</Form.Label>
+                        <InputGroup>
+                            <InputGroup.Text>
+                                <i className="fa-solid fa-clock" />
+                            </InputGroup.Text>
+                            <Form.Control
+                                type="number"
+                                {...register("totalTime")}
+                            />
+                        </InputGroup>
+                    </Form.Group>
+                    <Form.Group controlId="activityTimeMeasurement">
+                        <Form.Select
+                            onChange={(
+                                changedElement: ChangeEvent<HTMLSelectElement>,
+                            ): void => {
+                                const {
+                                    target: { value },
+                                } = changedElement;
+                                setValue(
+                                    "totalTimeMeasurement",
+                                    value === "SelectTimeMeasurement"
+                                        ? TimeMeasurement.NONE
+                                        : timeMeasurementMapping[value],
+                                );
+                            }}
+                        >
+                            <option value="SelectTimeMeasurement">
+                                {"Select Time Measurement"}
+                            </option>
+                            {timeMeasurements.map(
+                                (eachTimeMeasurement: string): JSX.Element => (
+                                    <option key={eachTimeMeasurement}>
+                                        {eachTimeMeasurement}
+                                    </option>
+                                ),
+                            )}
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group controlId="activityType">
+                        <Form.Select
+                            onChange={(
+                                changedElement: ChangeEvent<HTMLSelectElement>,
+                            ): void => {
+                                const {
+                                    target: { value },
+                                } = changedElement;
+                                setValue(
+                                    "type",
+                                    value === "TypeSelect"
+                                        ? ActivityType.NONE
+                                        : activityTypeMapping[value],
+                                );
+                            }}
+                        >
+                            <option value="TypeSelect">
+                                {"Select Activity Type"}
+                            </option>
+                            {activityTypes.map(
+                                (eachType: string): JSX.Element => (
+                                    <option key={eachType}>{eachType}</option>
+                                ),
+                            )}
                         </Form.Select>
                     </Form.Group>
                 </Form>

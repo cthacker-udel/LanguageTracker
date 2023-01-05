@@ -3,15 +3,14 @@
 
 enum ActivityLevel {
     NONE = -1,
-    VeryEasy = 0,
-    Easy = 1,
-    EasyMedium = 2,
-    Medium = 3,
-    MediumHard = 4,
-    Hard = 5,
-    HardVeryHard = 6,
-    VeryHard = 7,
-    Insane = 8,
+    VERYEASY = 0,
+    EASY = 1,
+    EASYMEDIUM = 2,
+    MEDIUM = 3,
+    MEDIUMHARD = 4,
+    HARD = 5,
+    VERYHARD = 6,
+    INSANE = 7,
 }
 
 enum TimeMeasurement {
