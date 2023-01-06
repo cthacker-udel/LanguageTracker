@@ -345,7 +345,35 @@ export const ProgrammingLanguageModal = ({
                             </InputGroup.Text>
                             <Form.Control
                                 type="number"
-                                {...register("totalTime")}
+                                {...register("totalTime", {
+                                    max: {
+                                        message:
+                                            TextConstants.INVALID
+                                                .PROGRAMMINGLANGUAGEMODAL
+                                                .TOTALTIME.max,
+                                        value: ValueConstants
+                                            .PROGRAMMINGLANGUAGEMODAL.TOTALTIME
+                                            .max,
+                                    },
+                                    min: {
+                                        message:
+                                            TextConstants.INVALID
+                                                .PROGRAMMINGLANGUAGEMODAL
+                                                .TOTALTIME.min,
+                                        value: ValueConstants
+                                            .PROGRAMMINGLANGUAGEMODAL.TOTALTIME
+                                            .min,
+                                    },
+                                    required: {
+                                        message:
+                                            TextConstants.INVALID
+                                                .PROGRAMMINGLANGUAGEMODAL
+                                                .TOTALTIME.required,
+                                        value: ValueConstants
+                                            .PROGRAMMINGLANGUAGEMODAL.TOTALTIME
+                                            .required,
+                                    },
+                                })}
                             />
                         </InputGroup>
                     </Form.Group>
