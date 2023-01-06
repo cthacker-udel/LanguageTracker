@@ -22,7 +22,7 @@ type ActivityData = {
     title: string;
     totalTime: number;
     totalTimeMeasurement: TimeMeasurement;
-    type: ActivityType;
+    type?: ActivityType;
 };
 
 type ProgrammingLanguageModalProperties = {
@@ -42,7 +42,6 @@ const initialValues: ActivityData = {
     title: "",
     totalTime: 0,
     totalTimeMeasurement: TimeMeasurement.NONE,
-    type: ActivityType.NONE,
 };
 
 const languages = [
