@@ -48,6 +48,7 @@ const initialValues: ActivityData = {
 };
 
 const languages = [
+    "None",
     "Python",
     "Javascript",
     "Typescript",
@@ -68,6 +69,7 @@ const languageMapping: { [key: string]: ActivityLanguage } = {
     HTML: ActivityLanguage.HTML,
     Java: ActivityLanguage.JAVA,
     Javascript: ActivityLanguage.JAVASCRIPT,
+    None: ActivityLanguage.NONE,
     Python: ActivityLanguage.PYTHON,
     SQL: ActivityLanguage.SQL,
     Typescript: ActivityLanguage.TYPESCRIPT,
@@ -132,13 +134,29 @@ export const ProgrammingLanguageModal = ({
     onSubmit,
     title,
 }: ProgrammingLanguageModalProperties): JSX.Element => {
-    const { clearErrors, formState, register, setError, setValue } =
+    const { formState, register, setError, setValue, watch } =
         useForm<ActivityData>({
             criteriaMode: "all",
             defaultValues: initialValues,
             mode: "all",
             reValidateMode: "onBlur",
         });
+
+    const { ref: languageReference, ...languageRegisterRest } = register(
+        "language",
+        {
+            required: {
+                message:
+                    TextConstants.INVALID.PROGRAMMINGLANGUAGEMODAL.LANGUAGE
+                        .required,
+                value: ValueConstants.PROGRAMMINGLANGUAGEMODAL.LANGUAGE
+                    .required,
+            },
+            valueAsNumber: true,
+        },
+    );
+
+    const [languageValue] = watch(["language"]);
 
     const { dirtyFields, errors, touchedFields } = formState;
 
@@ -394,24 +412,13 @@ export const ProgrammingLanguageModal = ({
                     <Form.Group controlId="activityLanguage">
                         <Form.Select
                             isInvalid={
-                                Boolean(errors.language) &&
-                                touchedFields.language
+                                touchedFields.language &&
+                                languageValue === ActivityLanguage.NONE
                             }
                             isValid={!errors.language && dirtyFields.language}
-                            onChange={(
-                                changedElement: ChangeEvent<HTMLSelectElement>,
-                            ): void => {
-                                const {
-                                    target: { value },
-                                } = changedElement;
-                                setValue(
-                                    "language",
-                                    value === "LanguageSelect"
-                                        ? ActivityLanguage.NONE
-                                        : languageMapping[value],
-                                    { shouldDirty: true },
-                                );
-                                if (value === "LanguageSelect") {
+                            {...languageRegisterRest}
+                            onClick={(): void => {
+                                if (languageValue === ActivityLanguage.NONE) {
                                     setError("language", {
                                         message:
                                             TextConstants.INVALID
@@ -419,39 +426,42 @@ export const ProgrammingLanguageModal = ({
                                                 .LANGUAGE.required,
                                         type: "required",
                                     });
-                                } else {
-                                    clearErrors("language");
                                 }
                             }}
+                            ref={languageReference}
                         >
-                            <option value="LanguageSelect">
-                                {"Select a language"}
-                            </option>
                             {languages.map(
                                 (eachLanguage: string): JSX.Element => (
-                                    <option key={eachLanguage}>
-                                        {eachLanguage}
+                                    <option
+                                        key={eachLanguage}
+                                        value={languageMapping[eachLanguage]}
+                                    >
+                                        {eachLanguage === "None"
+                                            ? "Select a Language"
+                                            : eachLanguage}
                                     </option>
                                 ),
                             )}
                         </Form.Select>
-                        {errors.language && (
-                            <Form.Control.Feedback type="invalid">
-                                {
-                                    TextConstants.INVALID
-                                        .PROGRAMMINGLANGUAGEMODAL.LANGUAGE
-                                        .required
-                                }
-                            </Form.Control.Feedback>
-                        )}
-                        {!errors.language && dirtyFields.language && (
-                            <Form.Control.Feedback type="valid">
-                                {
-                                    TextConstants.VALID.PROGRAMMINGLANGUAGEMODAL
-                                        .LANGUAGE
-                                }
-                            </Form.Control.Feedback>
-                        )}
+                        {touchedFields.language &&
+                            languageValue === ActivityLanguage.NONE && (
+                                <Form.Control.Feedback type="invalid">
+                                    {
+                                        TextConstants.INVALID
+                                            .PROGRAMMINGLANGUAGEMODAL.LANGUAGE
+                                            .required
+                                    }
+                                </Form.Control.Feedback>
+                            )}
+                        {touchedFields.language &&
+                            languageValue !== ActivityLanguage.NONE && (
+                                <Form.Control.Feedback type="valid">
+                                    {
+                                        TextConstants.VALID
+                                            .PROGRAMMINGLANGUAGEMODAL.LANGUAGE
+                                    }
+                                </Form.Control.Feedback>
+                            )}
                     </Form.Group>
                     <Form.Group controlId="activityLevel">
                         <Form.Select
