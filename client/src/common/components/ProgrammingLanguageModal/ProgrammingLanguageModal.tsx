@@ -14,15 +14,6 @@ import type { DashboardOverlayKeys } from "../../../pages/Dashboard/Dashboard";
 import { TextConstants, ValueConstants } from "../../constants";
 import styles from "./ProgrammingLanguageModal.module.css";
 
-type ProgrammingLanguageModalProperties = {
-    display: boolean;
-    dashboardKey?: DashboardOverlayKeys;
-    programmingLanguageImage: string;
-    onClose?: (_key: DashboardOverlayKeys | undefined) => void;
-    onSubmit?: (_key: DashboardOverlayKeys | undefined) => void;
-    title: string;
-};
-
 type ActivityData = {
     description: string;
     language: ActivityLanguage;
@@ -32,6 +23,15 @@ type ActivityData = {
     totalTime: number;
     totalTimeMeasurement: TimeMeasurement;
     type: ActivityType;
+};
+
+type ProgrammingLanguageModalProperties = {
+    display: boolean;
+    dashboardKey?: DashboardOverlayKeys;
+    programmingLanguageImage: string;
+    onClose?: (_key: DashboardOverlayKeys | undefined) => void;
+    onSubmit?: (_key: ActivityType, _data: Partial<ActivityData>) => void;
+    title: string;
 };
 
 const initialValues: ActivityData = {
@@ -106,7 +106,6 @@ const timeMeasurementMapping: { [key: string]: TimeMeasurement } = {
     Seconds: TimeMeasurement.SECONDS,
 };
 
-// eslint-disable-next-line no-unused-vars -- disabled
 const activityTypeMapping: { [key: string]: ActivityType } = {
     codewars: ActivityType.CODEWARS,
     edabit: ActivityType.EDABIT,
@@ -134,7 +133,7 @@ export const ProgrammingLanguageModal = ({
     onSubmit,
     title,
 }: ProgrammingLanguageModalProperties): JSX.Element => {
-    const { formState, register, reset, setError, watch } =
+    const { getValues, formState, register, reset, setError, watch } =
         useForm<ActivityData>({
             criteriaMode: "all",
             defaultValues: initialValues,
@@ -658,8 +657,14 @@ export const ProgrammingLanguageModal = ({
                         !dirtyFields.totalTimeMeasurement
                     }
                     onClick={(): void => {
-                        if (onSubmit !== undefined) {
-                            onSubmit(dashboardKey);
+                        if (
+                            onSubmit !== undefined &&
+                            dashboardKey !== undefined
+                        ) {
+                            onSubmit(
+                                activityTypeMapping[dashboardKey],
+                                getValues(),
+                            );
                         }
                     }}
                     variant="primary"
