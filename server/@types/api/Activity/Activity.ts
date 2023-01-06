@@ -1,6 +1,17 @@
+import type {
+    ActivityLanguage,
+    ActivityLevel,
+    ActivityType,
+    TimeMeasurement,
+} from "./ActivityEnums";
+
 export type Activity = {
-    type: number;
-    title: string;
     description: string;
-    user_id: number;
+    language: ActivityLanguage;
+    level: ActivityLevel;
+    link: string;
+    title: string;
+    totalTime: number;
+    totalTimeMeasurement: TimeMeasurement;
+    type: ActivityType;
 };

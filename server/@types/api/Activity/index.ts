@@ -1,2 +1,3 @@
 export * from "./Activity";
-export * from "./ActivityCode";
+export * from "./ActivityEnums";
+export * from "./ActivityTypes";
