@@ -256,10 +256,44 @@ export const ProgrammingLanguageModal = ({
                                 <i className="fa-solid fa-link" />
                             </InputGroup.Text>
                             <Form.Control
+                                isInvalid={errors.link && dirtyFields.link}
+                                isValid={!errors.link && dirtyFields.link}
                                 placeholder="Enter activity link"
                                 type="text"
-                                {...register("link")}
+                                {...register("link", {
+                                    maxLength: {
+                                        message:
+                                            TextConstants.INVALID
+                                                .PROGRAMMINGLANGUAGEMODAL.LINK
+                                                .maxLength,
+                                        value: ValueConstants
+                                            .PROGRAMMINGLANGUAGEMODAL.LINK
+                                            .maxLength,
+                                    },
+                                    minLength: {
+                                        message:
+                                            TextConstants.INVALID
+                                                .PROGRAMMINGLANGUAGEMODAL.LINK
+                                                .minLength,
+                                        value: ValueConstants
+                                            .PROGRAMMINGLANGUAGEMODAL.LINK
+                                            .minLength,
+                                    },
+                                })}
                             />
+                            {errors.link !== undefined && (
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.link.message}
+                                </Form.Control.Feedback>
+                            )}
+                            {errors.link === undefined && (
+                                <Form.Control.Feedback type="valid">
+                                    {
+                                        TextConstants.VALID
+                                            .PROGRAMMINGLANGUAGEMODAL.LINK
+                                    }
+                                </Form.Control.Feedback>
+                            )}
                         </InputGroup>
                     </Form.Group>
                     <Form.Group controlId="activityTitle">
