@@ -305,7 +305,35 @@ export const ProgrammingLanguageModal = ({
                             <Form.Control
                                 placeholder="Enter activity title"
                                 type="text"
-                                {...register("title")}
+                                {...register("title", {
+                                    maxLength: {
+                                        message:
+                                            TextConstants.INVALID
+                                                .PROGRAMMINGLANGUAGEMODAL.TITLE
+                                                .maxLength,
+                                        value: ValueConstants
+                                            .PROGRAMMINGLANGUAGEMODAL.TITLE
+                                            .maxLength,
+                                    },
+                                    minLength: {
+                                        message:
+                                            TextConstants.INVALID
+                                                .PROGRAMMINGLANGUAGEMODAL.TITLE
+                                                .minLength,
+                                        value: ValueConstants
+                                            .PROGRAMMINGLANGUAGEMODAL.TITLE
+                                            .minLength,
+                                    },
+                                    required: {
+                                        message:
+                                            TextConstants.INVALID
+                                                .PROGRAMMINGLANGUAGEMODAL.TITLE
+                                                .required,
+                                        value: ValueConstants
+                                            .PROGRAMMINGLANGUAGEMODAL.TITLE
+                                            .required,
+                                    },
+                                })}
                             />
                         </InputGroup>
                     </Form.Group>
