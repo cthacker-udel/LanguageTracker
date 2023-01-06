@@ -188,7 +188,7 @@ export const ProgrammingLanguageModal = ({
 
     const { dirtyFields, errors, touchedFields } = formState;
 
-    console.log(errors);
+    console.log(errors, dirtyFields);
 
     const [localTitle, setLocalTitle] = React.useState<string>(title);
     const [localImage, setLocalImage] = React.useState<string>(
@@ -350,6 +350,8 @@ export const ProgrammingLanguageModal = ({
                                 <i className="fa-solid fa-heading" />
                             </InputGroup.Text>
                             <Form.Control
+                                isInvalid={errors.title && dirtyFields.title}
+                                isValid={!errors.title && dirtyFields.title}
                                 placeholder="Enter activity title"
                                 type="text"
                                 {...register("title", {
@@ -382,6 +384,19 @@ export const ProgrammingLanguageModal = ({
                                     },
                                 })}
                             />
+                            {errors.title && dirtyFields.title && (
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.title.message}
+                                </Form.Control.Feedback>
+                            )}
+                            {!errors.title && dirtyFields.title && (
+                                <Form.Control.Feedback type="valid">
+                                    {
+                                        TextConstants.VALID
+                                            .PROGRAMMINGLANGUAGEMODAL.TITLE
+                                    }
+                                </Form.Control.Feedback>
+                            )}
                         </InputGroup>
                     </Form.Group>
                     <Form.Group controlId="activityTotalTime">
