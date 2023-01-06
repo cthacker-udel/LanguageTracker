@@ -92,7 +92,6 @@ const Dashboard = (): JSX.Element => {
         (key: DashboardOverlayKeys): JSX.Element => (
             <Button
                 onClick={(): void => {
-                    console.log("clicking");
                     triggerOverlay(key);
                 }}
                 variant="outline-light"
@@ -532,7 +531,6 @@ const Dashboard = (): JSX.Element => {
                 dashboardKey={gatherValidDashboardOverlayKey()}
                 display={Object.values(overlays).some(Boolean)}
                 onClose={(key: DashboardOverlayKeys | undefined): void => {
-                    console.log("firing onClose");
                     if (key !== undefined) {
                         triggerOverlay(key);
                     }

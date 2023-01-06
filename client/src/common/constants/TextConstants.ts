@@ -30,6 +30,39 @@ export const TextConstants = {
                 required: "Username is required",
             },
         },
+        PROGRAMMINGLANGUAGEMODAL: {
+            DESCRIPTION: {
+                maxLength: "Description cannot be more than 150 characters",
+                minLength: "Description must contain at least 25 characters",
+                required: "Description is required",
+            },
+            LANGUAGE: {
+                required: "Language is required",
+            },
+            LEVEL: {
+                required: "Level is required",
+            },
+            LINK: {
+                maxLength: "Link cannot be more than 200 characters",
+                minLength: "Link must be contain at least 1 character",
+            },
+            TITLE: {
+                maxLength: "Title cannot be more than 75 characters",
+                minLength: "Title must contain at least 5 characters",
+                required: "Title is required",
+            },
+            TOTALTIME: {
+                max: "Total time must be ≤ 99999",
+                min: "Total time must be ≥ 1",
+                required: "Total time is required",
+            },
+            TOTALTIMEMEASUREMENT: {
+                required: "Total time measurement is required",
+            },
+            TYPE: {
+                required: "Activity type is required",
+            },
+        },
         SIGN_UP_PAGE: {
             EMAIL: {
                 maxLength: "Email cannot be more than 100 characters long",
@@ -77,6 +110,16 @@ export const TextConstants = {
         LOGIN_PAGE: {
             PASSWORD: "Password is valid!",
             USERNAME: "Username is valid!",
+        },
+        PROGRAMMINGLANGUAGEMODAL: {
+            DESCRIPTION: "Description is valid!",
+            LANGUAGE: "Language is valid!",
+            LEVEL: "Level is valid!",
+            LINK: "Link is valid!",
+            TITLE: "Title is valid!",
+            TOTALTIME: "Total Time is valid!",
+            TOTALTIMEMEASUREMENT: "Total Time Measurement is valid!",
+            TYPE: "Activity Type is valid!",
         },
         SIGN_UP_PAGE: {
             EMAIL: "Email is valid!",

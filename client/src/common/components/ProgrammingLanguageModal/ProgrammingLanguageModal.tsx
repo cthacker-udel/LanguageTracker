@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/indent -- disabled */
 /* eslint-disable no-shadow -- happens with enums */
 /* eslint-disable no-unused-vars -- happens with enums */
+
 import React, { type ChangeEvent } from "react";
 import { Button, Form, InputGroup, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
@@ -11,6 +13,7 @@ import {
     TimeMeasurement,
 } from "../../../@types";
 import type { DashboardOverlayKeys } from "../../../pages/Dashboard/Dashboard";
+import { TextConstants, ValueConstants } from "../../constants";
 import styles from "./ProgrammingLanguageModal.module.css";
 
 type ProgrammingLanguageModalProperties = {
@@ -129,12 +132,15 @@ export const ProgrammingLanguageModal = ({
     onSubmit,
     title,
 }: ProgrammingLanguageModalProperties): JSX.Element => {
-    const { register, setValue } = useForm<ActivityData>({
+    const { formState, register, setValue, watch } = useForm<ActivityData>({
         criteriaMode: "all",
         defaultValues: initialValues,
         mode: "all",
         reValidateMode: "onBlur",
     });
+
+    const { dirtyFields, errors } = formState;
+
     const [localTitle, setLocalTitle] = React.useState<string>(title);
     const [localImage, setLocalImage] = React.useState<string>(
         programmingLanguageImage,
@@ -156,6 +162,8 @@ export const ProgrammingLanguageModal = ({
     React.useEffect(() => {
         updateLocalFields(title, programmingLanguageImage);
     }, [title, programmingLanguageImage, updateLocalFields]);
+
+    console.log(watch("description"));
 
     return (
         <Modal
@@ -186,10 +194,60 @@ export const ProgrammingLanguageModal = ({
                         <Form.Label>{"Description"}</Form.Label>
                         <Form.Control
                             as="textarea"
+                            isInvalid={
+                                errors.description !== undefined &&
+                                dirtyFields.description
+                            }
+                            isValid={
+                                !errors.description && dirtyFields.description
+                            }
                             placeholder="Enter activity description"
                             rows={3}
-                            {...register("description")}
+                            {...register("description", {
+                                maxLength: {
+                                    message:
+                                        TextConstants.INVALID
+                                            .PROGRAMMINGLANGUAGEMODAL
+                                            .DESCRIPTION.maxLength,
+                                    value: ValueConstants
+                                        .PROGRAMMINGLANGUAGEMODAL.DESCRIPTION
+                                        .maxLength,
+                                },
+                                minLength: {
+                                    message:
+                                        TextConstants.INVALID
+                                            .PROGRAMMINGLANGUAGEMODAL
+                                            .DESCRIPTION.minLength,
+                                    value: ValueConstants
+                                        .PROGRAMMINGLANGUAGEMODAL.DESCRIPTION
+                                        .minLength,
+                                },
+                                required: {
+                                    message:
+                                        TextConstants.INVALID
+                                            .PROGRAMMINGLANGUAGEMODAL
+                                            .DESCRIPTION.required,
+                                    value: ValueConstants
+                                        .PROGRAMMINGLANGUAGEMODAL.DESCRIPTION
+                                        .required,
+                                },
+                            })}
                         />
+                        {errors.description !== undefined && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.description.message}
+                            </Form.Control.Feedback>
+                        )}
+                        {dirtyFields.description &&
+                            errors.description === undefined && (
+                                <Form.Control.Feedback type="valid">
+                                    {
+                                        TextConstants.VALID
+                                            .PROGRAMMINGLANGUAGEMODAL
+                                            .DESCRIPTION
+                                    }
+                                </Form.Control.Feedback>
+                            )}
                     </Form.Group>
                     <Form.Group controlId="activityLink">
                         <Form.Label>{"Link"}</Form.Label>

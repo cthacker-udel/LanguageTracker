@@ -14,6 +14,39 @@ const ValueConstants = {
             required: true,
         },
     },
+    PROGRAMMINGLANGUAGEMODAL: {
+        DESCRIPTION: {
+            maxLength: 150,
+            minLength: 25,
+            required: true,
+        },
+        LANGUAGE: {
+            required: true,
+        },
+        LEVEL: {
+            required: true,
+        },
+        LINK: {
+            maxLength: 200,
+            minLength: 1,
+        },
+        TITLE: {
+            maxLength: 75,
+            minLength: 1,
+            required: true,
+        },
+        TOTALTIME: {
+            max: 99_999,
+            min: 1,
+            required: true,
+        },
+        TOTALTIMEMEASUREMENT: {
+            required: true,
+        },
+        TYPE: {
+            required: true,
+        },
+    },
     SIGN_UP_PAGE: {
         EMAIL: {
             maxLength: 100,
