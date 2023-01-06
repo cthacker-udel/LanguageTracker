@@ -76,6 +76,7 @@ const languageMapping: { [key: string]: ActivityLanguage } = {
 };
 
 const levels = [
+    "None",
     "Very Easy",
     "Easy",
     "Easy-Medium",
@@ -93,6 +94,7 @@ const levelMapping: { [key: string]: ActivityLevel } = {
     Insane: ActivityLevel.INSANE,
     Medium: ActivityLevel.MEDIUM,
     "Medium-Hard": ActivityLevel.MEDIUMHARD,
+    None: ActivityLevel.NONE,
     "Very Easy": ActivityLevel.VERYEASY,
     "Very Hard": ActivityLevel.VERYHARD,
 };
@@ -156,11 +158,22 @@ export const ProgrammingLanguageModal = ({
         },
     );
 
-    const [languageValue] = watch(["language"]);
+    const { ref: difficultyLevelReference, ...difficultyLevelRegisterRest } =
+        register("level", {
+            required: {
+                message:
+                    TextConstants.INVALID.PROGRAMMINGLANGUAGEMODAL.LEVEL
+                        .required,
+                value: ValueConstants.PROGRAMMINGLANGUAGEMODAL.LEVEL.required,
+            },
+            valueAsNumber: true,
+        });
+
+    const [languageValue, difficultyLevelValue] = watch(["language", "level"]);
 
     const { dirtyFields, errors, touchedFields } = formState;
 
-    console.log(errors, dirtyFields, touchedFields);
+    console.log(touchedFields, difficultyLevelValue);
 
     const [localTitle, setLocalTitle] = React.useState<string>(title);
     const [localImage, setLocalImage] = React.useState<string>(
@@ -465,29 +478,62 @@ export const ProgrammingLanguageModal = ({
                     </Form.Group>
                     <Form.Group controlId="activityLevel">
                         <Form.Select
-                            onChange={(
-                                changedElement: ChangeEvent<HTMLSelectElement>,
-                            ): void => {
-                                const {
-                                    target: { value },
-                                } = changedElement;
-                                setValue(
-                                    "level",
-                                    value === "LevelSelect"
-                                        ? ActivityLevel.NONE
-                                        : levelMapping[value],
-                                );
+                            isInvalid={
+                                touchedFields.level &&
+                                difficultyLevelValue === ActivityLevel.NONE
+                            }
+                            isValid={
+                                touchedFields.level &&
+                                difficultyLevelValue !== ActivityLevel.NONE
+                            }
+                            ref={difficultyLevelReference}
+                            {...difficultyLevelRegisterRest}
+                            onClick={(): void => {
+                                if (
+                                    difficultyLevelValue === ActivityLevel.NONE
+                                ) {
+                                    setError("level", {
+                                        message:
+                                            TextConstants.INVALID
+                                                .PROGRAMMINGLANGUAGEMODAL.LEVEL
+                                                .required,
+                                        type: "required",
+                                    });
+                                }
                             }}
                         >
-                            <option value="LevelSelect">
-                                {"Select a Difficulty Level"}
-                            </option>
                             {levels.map(
                                 (eachLevel: string): JSX.Element => (
-                                    <option key={eachLevel}>{eachLevel}</option>
+                                    <option
+                                        key={eachLevel}
+                                        value={levelMapping[eachLevel]}
+                                    >
+                                        {eachLevel === "None"
+                                            ? "Select a Difficulty Level"
+                                            : eachLevel}
+                                    </option>
                                 ),
                             )}
                         </Form.Select>
+                        {touchedFields.level &&
+                            difficultyLevelValue === ActivityLevel.NONE && (
+                                <Form.Control.Feedback type="invalid">
+                                    {
+                                        TextConstants.INVALID
+                                            .PROGRAMMINGLANGUAGEMODAL.LEVEL
+                                            .required
+                                    }
+                                </Form.Control.Feedback>
+                            )}
+                        {touchedFields.level &&
+                            difficultyLevelValue !== ActivityLevel.NONE && (
+                                <Form.Control.Feedback type="valid">
+                                    {
+                                        TextConstants.VALID
+                                            .PROGRAMMINGLANGUAGEMODAL.LEVEL
+                                    }
+                                </Form.Control.Feedback>
+                            )}
                     </Form.Group>
                     <Form.Group controlId="activityTimeMeasurement">
                         <Form.Select
