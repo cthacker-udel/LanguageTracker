@@ -99,21 +99,20 @@ const levelMapping: { [key: string]: ActivityLevel } = {
     "Very Hard": ActivityLevel.VERYHARD,
 };
 
-const timeMeasurements = ["Seconds", "Minutes", "Hours"];
+const timeMeasurements = ["None", "Seconds", "Minutes", "Hours"];
 
 const timeMeasurementMapping: { [key: string]: TimeMeasurement } = {
     Hours: TimeMeasurement.HOURS,
     Minutes: TimeMeasurement.MINUTES,
+    None: TimeMeasurement.NONE,
     Seconds: TimeMeasurement.SECONDS,
 };
 
-const activityTypes = ["Codewars", "Edabit", "Leetcode", "Languages"];
-
 const activityTypeMapping: { [key: string]: ActivityType } = {
-    Codewars: ActivityType.CODEWARS,
-    Edabit: ActivityType.EDABIT,
-    Languages: ActivityType.LANGUAGES,
-    Leetcode: ActivityType.LEETCODE,
+    codewars: ActivityType.CODEWARS,
+    edabit: ActivityType.EDABIT,
+    languages: ActivityType.LANGUAGES,
+    leetcode: ActivityType.LEETCODE,
 };
 
 /**
@@ -169,11 +168,27 @@ export const ProgrammingLanguageModal = ({
             valueAsNumber: true,
         });
 
-    const [languageValue, difficultyLevelValue] = watch(["language", "level"]);
+    const { ref: timeMeasurementReference, ...timeMeasurementRegisterRest } =
+        register("totalTimeMeasurement", {
+            required: {
+                message:
+                    TextConstants.INVALID.PROGRAMMINGLANGUAGEMODAL
+                        .TOTALTIMEMEASUREMENT.required,
+                value: ValueConstants.PROGRAMMINGLANGUAGEMODAL
+                    .TOTALTIMEMEASUREMENT.required,
+            },
+            valueAsNumber: true,
+        });
+
+    const [languageValue, difficultyLevelValue, timeMeasurementValue] = watch([
+        "language",
+        "level",
+        "totalTimeMeasurement",
+    ]);
 
     const { dirtyFields, errors, touchedFields } = formState;
 
-    console.log(touchedFields, difficultyLevelValue);
+    console.log(errors);
 
     const [localTitle, setLocalTitle] = React.useState<string>(title);
     const [localImage, setLocalImage] = React.useState<string>(
@@ -376,6 +391,12 @@ export const ProgrammingLanguageModal = ({
                                 <i className="fa-solid fa-clock" />
                             </InputGroup.Text>
                             <Form.Control
+                                isInvalid={
+                                    errors.totalTime && touchedFields.totalTime
+                                }
+                                isValid={
+                                    !errors.totalTime && touchedFields.totalTime
+                                }
                                 type="number"
                                 {...register("totalTime", {
                                     max: {
@@ -405,14 +426,15 @@ export const ProgrammingLanguageModal = ({
                                             .PROGRAMMINGLANGUAGEMODAL.TOTALTIME
                                             .required,
                                     },
+                                    valueAsNumber: true,
                                 })}
                             />
-                            {errors.totalTime && dirtyFields.totalTime && (
+                            {errors.totalTime && touchedFields.totalTime && (
                                 <Form.Control.Feedback type="invalid">
                                     {errors.totalTime.message}
                                 </Form.Control.Feedback>
                             )}
-                            {!errors.totalTime && dirtyFields.totalTime && (
+                            {!errors.totalTime && touchedFields.totalTime && (
                                 <Form.Control.Feedback type="valid">
                                     {
                                         TextConstants.VALID
@@ -537,57 +559,68 @@ export const ProgrammingLanguageModal = ({
                     </Form.Group>
                     <Form.Group controlId="activityTimeMeasurement">
                         <Form.Select
-                            onChange={(
-                                changedElement: ChangeEvent<HTMLSelectElement>,
-                            ): void => {
-                                const {
-                                    target: { value },
-                                } = changedElement;
-                                setValue(
-                                    "totalTimeMeasurement",
-                                    value === "SelectTimeMeasurement"
-                                        ? TimeMeasurement.NONE
-                                        : timeMeasurementMapping[value],
-                                );
+                            isInvalid={
+                                touchedFields.totalTimeMeasurement &&
+                                timeMeasurementValue === TimeMeasurement.NONE
+                            }
+                            isValid={
+                                touchedFields.totalTimeMeasurement &&
+                                timeMeasurementValue !== TimeMeasurement.NONE
+                            }
+                            ref={timeMeasurementReference}
+                            {...timeMeasurementRegisterRest}
+                            onClick={(): void => {
+                                if (
+                                    timeMeasurementValue ===
+                                    TimeMeasurement.NONE
+                                ) {
+                                    setError("totalTimeMeasurement", {
+                                        message:
+                                            TextConstants.INVALID
+                                                .PROGRAMMINGLANGUAGEMODAL
+                                                .TOTALTIMEMEASUREMENT.required,
+                                        type: "required",
+                                    });
+                                }
                             }}
                         >
-                            <option value="SelectTimeMeasurement">
-                                {"Select Time Measurement"}
-                            </option>
                             {timeMeasurements.map(
                                 (eachTimeMeasurement: string): JSX.Element => (
-                                    <option key={eachTimeMeasurement}>
-                                        {eachTimeMeasurement}
+                                    <option
+                                        key={eachTimeMeasurement}
+                                        value={
+                                            timeMeasurementMapping[
+                                                eachTimeMeasurement
+                                            ]
+                                        }
+                                    >
+                                        {eachTimeMeasurement === "None"
+                                            ? "Select a Time Measurement"
+                                            : eachTimeMeasurement}
                                     </option>
                                 ),
                             )}
                         </Form.Select>
-                    </Form.Group>
-                    <Form.Group controlId="activityType">
-                        <Form.Select
-                            onChange={(
-                                changedElement: ChangeEvent<HTMLSelectElement>,
-                            ): void => {
-                                const {
-                                    target: { value },
-                                } = changedElement;
-                                setValue(
-                                    "type",
-                                    value === "TypeSelect"
-                                        ? ActivityType.NONE
-                                        : activityTypeMapping[value],
-                                );
-                            }}
-                        >
-                            <option value="TypeSelect">
-                                {"Select Activity Type"}
-                            </option>
-                            {activityTypes.map(
-                                (eachType: string): JSX.Element => (
-                                    <option key={eachType}>{eachType}</option>
-                                ),
+                        {touchedFields.totalTimeMeasurement &&
+                            timeMeasurementValue === TimeMeasurement.NONE && (
+                                <Form.Control.Feedback type="invalid">
+                                    {
+                                        TextConstants.INVALID
+                                            .PROGRAMMINGLANGUAGEMODAL
+                                            .TOTALTIMEMEASUREMENT.required
+                                    }
+                                </Form.Control.Feedback>
                             )}
-                        </Form.Select>
+                        {touchedFields.totalTimeMeasurement &&
+                            timeMeasurementValue !== TimeMeasurement.NONE && (
+                                <Form.Control.Feedback type="valid">
+                                    {
+                                        TextConstants.VALID
+                                            .PROGRAMMINGLANGUAGEMODAL
+                                            .TOTALTIMEMEASUREMENT
+                                    }
+                                </Form.Control.Feedback>
+                            )}
                     </Form.Group>
                 </Form>
             </Modal.Body>
