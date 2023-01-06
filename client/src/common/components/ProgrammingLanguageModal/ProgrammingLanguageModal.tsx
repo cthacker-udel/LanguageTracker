@@ -132,14 +132,17 @@ export const ProgrammingLanguageModal = ({
     onSubmit,
     title,
 }: ProgrammingLanguageModalProperties): JSX.Element => {
-    const { formState, register, setValue, watch } = useForm<ActivityData>({
-        criteriaMode: "all",
-        defaultValues: initialValues,
-        mode: "all",
-        reValidateMode: "onBlur",
-    });
+    const { clearErrors, formState, register, setError, setValue } =
+        useForm<ActivityData>({
+            criteriaMode: "all",
+            defaultValues: initialValues,
+            mode: "all",
+            reValidateMode: "onBlur",
+        });
 
-    const { dirtyFields, errors } = formState;
+    const { dirtyFields, errors, touchedFields } = formState;
+
+    console.log(errors, dirtyFields, touchedFields);
 
     const [localTitle, setLocalTitle] = React.useState<string>(title);
     const [localImage, setLocalImage] = React.useState<string>(
@@ -162,8 +165,6 @@ export const ProgrammingLanguageModal = ({
     React.useEffect(() => {
         updateLocalFields(title, programmingLanguageImage);
     }, [title, programmingLanguageImage, updateLocalFields]);
-
-    console.log(watch("description"));
 
     return (
         <Modal
@@ -375,10 +376,28 @@ export const ProgrammingLanguageModal = ({
                                     },
                                 })}
                             />
+                            {errors.totalTime && dirtyFields.totalTime && (
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.totalTime.message}
+                                </Form.Control.Feedback>
+                            )}
+                            {!errors.totalTime && dirtyFields.totalTime && (
+                                <Form.Control.Feedback type="valid">
+                                    {
+                                        TextConstants.VALID
+                                            .PROGRAMMINGLANGUAGEMODAL.TOTALTIME
+                                    }
+                                </Form.Control.Feedback>
+                            )}
                         </InputGroup>
                     </Form.Group>
                     <Form.Group controlId="activityLanguage">
                         <Form.Select
+                            isInvalid={
+                                Boolean(errors.language) &&
+                                touchedFields.language
+                            }
+                            isValid={!errors.language && dirtyFields.language}
                             onChange={(
                                 changedElement: ChangeEvent<HTMLSelectElement>,
                             ): void => {
@@ -390,7 +409,19 @@ export const ProgrammingLanguageModal = ({
                                     value === "LanguageSelect"
                                         ? ActivityLanguage.NONE
                                         : languageMapping[value],
+                                    { shouldDirty: true },
                                 );
+                                if (value === "LanguageSelect") {
+                                    setError("language", {
+                                        message:
+                                            TextConstants.INVALID
+                                                .PROGRAMMINGLANGUAGEMODAL
+                                                .LANGUAGE.required,
+                                        type: "required",
+                                    });
+                                } else {
+                                    clearErrors("language");
+                                }
                             }}
                         >
                             <option value="LanguageSelect">
@@ -404,6 +435,23 @@ export const ProgrammingLanguageModal = ({
                                 ),
                             )}
                         </Form.Select>
+                        {errors.language && (
+                            <Form.Control.Feedback type="invalid">
+                                {
+                                    TextConstants.INVALID
+                                        .PROGRAMMINGLANGUAGEMODAL.LANGUAGE
+                                        .required
+                                }
+                            </Form.Control.Feedback>
+                        )}
+                        {!errors.language && dirtyFields.language && (
+                            <Form.Control.Feedback type="valid">
+                                {
+                                    TextConstants.VALID.PROGRAMMINGLANGUAGEMODAL
+                                        .LANGUAGE
+                                }
+                            </Form.Control.Feedback>
+                        )}
                     </Form.Group>
                     <Form.Group controlId="activityLevel">
                         <Form.Select
