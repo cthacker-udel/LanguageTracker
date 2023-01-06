@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
-/* eslint-disable no-shadow -- happens with enums */
-/* eslint-disable no-unused-vars -- happens with enums */
 
-import React, { type ChangeEvent } from "react";
+import React from "react";
 import { Button, Form, InputGroup, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
@@ -108,6 +106,7 @@ const timeMeasurementMapping: { [key: string]: TimeMeasurement } = {
     Seconds: TimeMeasurement.SECONDS,
 };
 
+// eslint-disable-next-line no-unused-vars -- disabled
 const activityTypeMapping: { [key: string]: ActivityType } = {
     codewars: ActivityType.CODEWARS,
     edabit: ActivityType.EDABIT,
@@ -135,7 +134,7 @@ export const ProgrammingLanguageModal = ({
     onSubmit,
     title,
 }: ProgrammingLanguageModalProperties): JSX.Element => {
-    const { formState, register, setError, setValue, watch } =
+    const { formState, register, reset, setError, watch } =
         useForm<ActivityData>({
             criteriaMode: "all",
             defaultValues: initialValues,
@@ -188,8 +187,6 @@ export const ProgrammingLanguageModal = ({
 
     const { dirtyFields, errors, touchedFields } = formState;
 
-    console.log(errors, dirtyFields);
-
     const [localTitle, setLocalTitle] = React.useState<string>(title);
     const [localImage, setLocalImage] = React.useState<string>(
         programmingLanguageImage,
@@ -216,6 +213,7 @@ export const ProgrammingLanguageModal = ({
         <Modal
             onExit={(): void => {
                 clearLocalFields();
+                reset(initialValues);
             }}
             onHide={(): void => {
                 if (onClose !== undefined) {
@@ -651,6 +649,14 @@ export const ProgrammingLanguageModal = ({
                     {"Cancel"}
                 </Button>
                 <Button
+                    disabled={
+                        Object.keys(errors).length > 0 ||
+                        !dirtyFields.title ||
+                        !dirtyFields.language ||
+                        !dirtyFields.level ||
+                        !dirtyFields.totalTime ||
+                        !dirtyFields.totalTimeMeasurement
+                    }
                     onClick={(): void => {
                         if (onSubmit !== undefined) {
                             onSubmit(dashboardKey);

@@ -59,9 +59,6 @@ export const TextConstants = {
             TOTALTIMEMEASUREMENT: {
                 required: "Total time measurement is required",
             },
-            TYPE: {
-                required: "Activity type is required",
-            },
         },
         SIGN_UP_PAGE: {
             EMAIL: {

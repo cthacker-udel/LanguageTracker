@@ -43,9 +43,6 @@ const ValueConstants = {
         TOTALTIMEMEASUREMENT: {
             required: true,
         },
-        TYPE: {
-            required: true,
-        },
     },
     SIGN_UP_PAGE: {
         EMAIL: {
