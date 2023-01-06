@@ -1,1 +1,1 @@
-export { ProgrammingLanguageModal } from "./ProgrammingLanguageModal";
+export * from "./ProgrammingLanguageModal";

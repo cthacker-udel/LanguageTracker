@@ -125,7 +125,7 @@ const activityTypeMapping: { [key: string]: ActivityType } = {
  * @param props.title - The title of the modal
  * @returns The Programming Language Modal
  */
-export const ProgrammingLanguageModal = ({
+const ProgrammingLanguageModal = ({
     display,
     dashboardKey,
     programmingLanguageImage,
@@ -675,3 +675,5 @@ export const ProgrammingLanguageModal = ({
         </Modal>
     );
 };
+
+export { type ActivityData, ProgrammingLanguageModal };

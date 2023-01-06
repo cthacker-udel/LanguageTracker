@@ -14,7 +14,12 @@ import {
     YAxis,
 } from "recharts";
 
-import { capitalize, ProgrammingLanguageModal } from "../../common";
+import type { ActivityType } from "../../@types";
+import {
+    type ActivityData,
+    capitalize,
+    ProgrammingLanguageModal,
+} from "../../common";
 import { renderTooltip } from "../../common/helpers/renderTooltip";
 import codewarsLogo from "./codewarslogo.svg";
 import styles from "./Dashboard.module.css";
@@ -535,10 +540,15 @@ const Dashboard = (): JSX.Element => {
                         triggerOverlay(key);
                     }
                 }}
-                onSubmit={(key: DashboardOverlayKeys | undefined): void => {
-                    if (key !== undefined) {
-                        triggerOverlay(key);
+                onSubmit={(
+                    key: ActivityType,
+                    values: Partial<ActivityData>,
+                ): void => {
+                    const validDashboardKey = gatherValidDashboardOverlayKey();
+                    if (validDashboardKey !== undefined) {
+                        triggerOverlay(validDashboardKey);
                     }
+                    console.log(key, values);
                 }}
                 programmingLanguageImage={gatherImageFromValidDashboardOverlayKey()}
                 title={`Add ${capitalize(
