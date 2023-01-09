@@ -52,16 +52,6 @@ export class ActivityControllerPost
             const validationResult = activityPostSchema.validate(
                 request.body as Activity & { username: string },
             );
-            console.log(
-                title,
-                description,
-                activity_level,
-                total_time,
-                time_type,
-                language_type,
-                activity_type,
-                validationResult.error,
-            );
             if (
                 title === undefined ||
                 description === undefined ||

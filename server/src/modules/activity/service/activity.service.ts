@@ -33,7 +33,6 @@ export class ActivityService extends BaseService {
     ): Promise<Activity | undefined> => {
         this.setTableName("ACTIVITY");
         const findQueryConstructor = `SELECT * FROM ${this.TABLE_NAME} WHERE id=${id}`;
-        console.log(findQueryConstructor);
         const findResult = await client.query(findQueryConstructor);
         if (findResult.rows.length === 0) {
             return undefined;
@@ -152,7 +151,6 @@ export class ActivityService extends BaseService {
 
         const insertionQuery = `${insertionSetup}${insertionValues}`;
 
-        console.log(insertionQuery);
         const insertResult = await client.query(insertionQuery);
         return insertResult.rowCount > 0;
     };
