@@ -4,7 +4,6 @@ import type { Client } from "pg";
 
 import type { BaseControllerSpec } from "../../../../common";
 import { Logger } from "../../../../common/log/Logger";
-import { rejectSession } from "../../../../common/middleware/sessionMethods";
 import type { UserService } from "../user.service";
 
 /**
@@ -249,7 +248,6 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
         // eslint-disable-next-line @typescript-eslint/require-await -- disabled
     ): Promise<void> => {
         try {
-            rejectSession(request, response);
             response.status(200);
             response.send({});
         } catch (error: unknown) {

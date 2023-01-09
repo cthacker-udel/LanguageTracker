@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this -- disabled */
 /* eslint-disable max-statements -- disabled */
 /* eslint-disable camelcase -- disabled */
 import type { Client } from "pg";
@@ -29,7 +30,7 @@ export class UserService extends BaseService {
         username: string,
     ): Promise<Partial<User> | undefined> => {
         const result = await client.query(
-            `SELECT first_name, last_name, dob, user_id, email from ${this.TABLE_NAME} WHERE username='${username}'`,
+            `SELECT first_name, last_name, dob, user_id, email from ${this.TABLE_NAME} WHERE username='${username}';`,
         );
         return result.rowCount > 0 ? result.rows[0] : undefined;
     };
@@ -46,7 +47,7 @@ export class UserService extends BaseService {
         firstName: string,
     ): Promise<Partial<User[]> | undefined> => {
         const result = await client.query(
-            `SELECT first_name, last_name, dob, user_id, email from ${this.TABLE_NAME} WHERE first_name='${firstName}'`,
+            `SELECT first_name, last_name, dob, user_id, email from ${this.TABLE_NAME} WHERE first_name='${firstName}';`,
         );
         return result.rowCount > 0 ? result.rows : undefined;
     };
@@ -63,7 +64,7 @@ export class UserService extends BaseService {
         lastName: string,
     ): Promise<Partial<User[]> | undefined> => {
         const result = await client.query(
-            `SELECT first_name, last_name, dob, user_id, email from ${this.TABLE_NAME} WHERE last_name='${lastName}'`,
+            `SELECT first_name, last_name, dob, user_id, email from ${this.TABLE_NAME} WHERE last_name='${lastName}';`,
         );
         return result.rowCount > 0 ? result.rows : undefined;
     };
@@ -80,7 +81,7 @@ export class UserService extends BaseService {
         userId: number,
     ): Promise<Partial<User> | undefined> => {
         const result = await client.query(
-            `SELECT first_name, last_name, dob, user_id, email from ${this.TABLE_NAME} WHERE user_id=${userId}`,
+            `SELECT first_name, last_name, dob, user_id, email from ${this.TABLE_NAME} WHERE user_id=${userId};`,
         );
         return result.rowCount > 0 ? result.rows[0] : undefined;
     };
@@ -97,7 +98,7 @@ export class UserService extends BaseService {
         email: string,
     ): Promise<Partial<User> | undefined> => {
         const result = await client.query(
-            `SELECT first_name, last_name, dob, user_id, email from ${this.TABLE_NAME} WHERE email='${email}'`,
+            `SELECT first_name, last_name, dob, user_id, email from ${this.TABLE_NAME} WHERE email='${email}';`,
         );
         return result.rowCount > 0 ? result.rows[0] : undefined;
     };
@@ -173,7 +174,7 @@ export class UserService extends BaseService {
                 if (encryptionResult.rowCount > 0) {
                     const findEncryptionRowQuery =
                         await this.findUserEncryptionData(client, user_id);
-                    const updateEncryptionIdQuery = `UPDATE ${this.TABLE_NAME} SET encryption_id=${findEncryptionRowQuery?.encryption_id} WHERE user_id=${user_id}`;
+                    const updateEncryptionIdQuery = `UPDATE ${this.TABLE_NAME} SET encryption_id=${findEncryptionRowQuery?.encryption_id} WHERE user_id=${user_id};`;
                     const updateEncryptionIdQueryResult = await client.query(
                         updateEncryptionIdQuery,
                     );
@@ -232,29 +233,16 @@ export class UserService extends BaseService {
             caesar_iterations,
         );
 
+        const addedSessionData = await this.addUserSessionSecretData(
+            client,
+            foundUser?.user_id,
+        );
+
         return (
+            addedSessionData &&
             foundUser?.password === encryptedPassword &&
             foundUser.username === username
         );
-    };
-
-    /**
-     * Finds the encryption data associated with the user
-     *
-     * @param client - The client we are using to execute the query to find the encryption data
-     * @param user_id - The user id we are using to locate the encryption data
-     */
-    // eslint-disable-next-line class-methods-use-this -- disabled
-    private readonly findUserEncryptionData = async (
-        client: Client,
-        user_id: number | undefined,
-    ): Promise<Partial<EncryptionData | undefined>> => {
-        if (user_id !== undefined) {
-            const query = `SELECT encryption_id, user_id, pbkdf2_salt, pbkdf2_iterations, sha_salt, sha_iterations, caesar_rotations, caesar_iterations FROM "ENCRYPTION_DATA" WHERE user_id=${user_id}`;
-            const result = await client.query(query);
-            return result.rows[0] as Partial<EncryptionData>;
-        }
-        return undefined;
     };
 
     /**
@@ -264,13 +252,110 @@ export class UserService extends BaseService {
      * @param username - The username we are searching for
      * @returns Whether or not the user exists
      */
-    private readonly findUserByUsernameWithPassword = async (
+    public readonly findUserByUsernameWithPassword = async (
         client: Client,
         username: string,
     ): Promise<Partial<User> | undefined> => {
         const result = await client.query(
-            `SELECT username, first_name, last_name, dob, user_id, password, email from ${this.TABLE_NAME} WHERE username='${username}'`,
+            `SELECT username, first_name, last_name, dob, user_id, password, email from ${this.TABLE_NAME} WHERE username='${username}';`,
         );
         return result.rowCount > 0 ? result.rows[0] : undefined;
+    };
+
+    public readonly findUserSessionEncryptionData = async (
+        client: Client,
+        username: string,
+    ): Promise<string | undefined> => {
+        const foundUser = await this.findUserByUsername(client, username);
+        const findSessionEncryptionDataQuery = `SELECT session_secret FROM "SESSION_SECRET" WHERE user_id=${foundUser?.user_id};`;
+        const foundSessionSecret = await client.query(
+            findSessionEncryptionDataQuery,
+        );
+        return foundSessionSecret.rowCount > 0
+            ? foundSessionSecret.rows[0].session_secret
+            : undefined;
+    };
+
+    /**
+     * Finds the encryption data associated with the user
+     *
+     * @param client - The client we are using to execute the query to find the encryption data
+     * @param user_id - The user id we are using to locate the encryption data
+     */
+    private readonly findUserEncryptionData = async (
+        client: Client,
+        user_id: number | undefined,
+    ): Promise<Partial<EncryptionData | undefined>> => {
+        if (user_id !== undefined) {
+            const query = `SELECT encryption_id, user_id, pbkdf2_salt, pbkdf2_iterations, sha_salt, sha_iterations, caesar_rotations, caesar_iterations FROM "ENCRYPTION_DATA" WHERE user_id=${user_id};`;
+            const result = await client.query(query);
+            return result.rows[0] as Partial<EncryptionData>;
+        }
+        return undefined;
+    };
+
+    /**
+     * Checks in the database for any session data entries with the same user_id that was passed in
+     *
+     * @param client - the postgres client
+     * @param user_id - the user id we are checking if the session data already exists for
+     */
+    private readonly doesSessionSecretDataExist = async (
+        client: Client,
+        user_id: number,
+    ): Promise<boolean> => {
+        const doesSessionSecretExistQuery = `SELECT * FROM "SESSION_SECRET" WHERE user_id=${user_id};`;
+        const result = await client.query(doesSessionSecretExistQuery);
+        return result.rowCount > 0;
+    };
+
+    /**
+     * Updates the row containing the user's session secret data
+     *
+     * @param client - The postgres client
+     * @param user_id - The user_id
+     * @returns Whether the session data was updated successfully or not
+     */
+    private readonly updateSessionSecretData = async (
+        client: Client,
+        user_id: number,
+    ): Promise<boolean> => {
+        const generatedSessionSecret =
+            EncryptionService.generateSessionSecret();
+        const updateQuery = `UPDATE "SESSION_SECRET" SET session_secret='${generatedSessionSecret}' WHERE user_id=${user_id};`;
+        const updateResult = await client.query(updateQuery);
+        return updateResult.rowCount > 0;
+    };
+
+    /**
+     * Adds/updates the row containing the session data with new data or in regards to the table an entire new row
+     *
+     * @param client - The postgres client
+     * @param user_id - The user_id
+     * @returns Whether the session data was added/altered successfully
+     */
+    private readonly addUserSessionSecretData = async (
+        client: Client,
+        user_id: number | undefined,
+    ): Promise<boolean> => {
+        if (user_id === undefined) {
+            return false;
+        }
+        const doesSessionDataExist = await this.doesSessionSecretDataExist(
+            client,
+            user_id,
+        );
+        if (doesSessionDataExist) {
+            const updateResult = await this.updateSessionSecretData(
+                client,
+                user_id,
+            );
+            return updateResult;
+        }
+        const generatedSessionSecret =
+            EncryptionService.generateSessionSecret();
+        const addQuery = `INSERT INTO "SESSION_SECRET" (session_secret, user_id) VALUES ('${generatedSessionSecret}', ${user_id});`;
+        const addResult = await client.query(addQuery);
+        return addResult.rowCount > 0;
     };
 }

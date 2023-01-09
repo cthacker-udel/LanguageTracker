@@ -90,7 +90,12 @@ export class UserControllerPost implements BaseControllerSpec<UserService> {
                     password,
                 );
                 if (loginResult) {
-                    addSession(request, response);
+                    await addSession(
+                        request,
+                        response,
+                        this.client,
+                        this.service,
+                    );
                     response.status(204);
                     response.send({});
                 } else {

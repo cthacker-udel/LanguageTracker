@@ -2,11 +2,17 @@
 /* eslint-disable no-console -- needed for connecting to database */
 import cors from "cors";
 import * as dotenv from "dotenv";
-import express from "express";
+import express, {
+    type NextFunction,
+    type Request,
+    type Response,
+} from "express";
 import { Client } from "pg";
 
+import { cookieMiddleware } from "../common/middleware/sessionMethods";
 import config from "./config.json";
 import { AppController } from "./controller";
+import { UserService } from "./modules/user/user.service";
 /**
  * Connects the postgres client, since the method to connect is async, we cannot create an async constructor, so therefore we must
  * move it outside the class into an async method
@@ -37,15 +43,15 @@ class LanguageTrackerApplication {
     public postgresClient: Client;
 
     /**
+     * User service for any middleware operations
+     */
+    public userService: UserService;
+
+    /**
      * No-arg constructor that initializes all the fields of the application
      */
     public constructor() {
         dotenv.config();
-        this.app = express();
-        this.port = config.env === undefined ? 3001 : config.env;
-        this.app.use(cors({ methods: ["GET", "PUT", "POST"], origin: true }));
-        this.app.use(express.urlencoded({ extended: false }));
-        this.app.use(express.json());
         this.postgresClient = new Client();
         connectPostgresClient(this.postgresClient)
             .then((_) => {
@@ -58,6 +64,23 @@ class LanguageTrackerApplication {
                     }`,
                 );
             });
+        this.app = express();
+        this.port = config.env === undefined ? 3001 : config.env;
+        this.userService = new UserService();
+        this.app.use(
+            (request: Request, response: Response, next: NextFunction) => {
+                cookieMiddleware(
+                    request,
+                    response,
+                    next,
+                    this.postgresClient,
+                    this.userService,
+                );
+            },
+        );
+        this.app.use(cors({ methods: ["GET", "PUT", "POST"], origin: true }));
+        this.app.use(express.urlencoded({ extended: false }));
+        this.app.use(express.json());
     }
 
     /**

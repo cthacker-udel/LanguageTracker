@@ -116,16 +116,13 @@ export class EncryptionService {
      * Encrypts the username and password into the session token to pass back to the user
      *
      * @param username - The username to hash
-     * @param password - The password to hash
+     * @param secret - The secret to generate the hash
      * @returns The encrypted session of the username + password
      */
-    public static sessionEncryption(
-        username: string,
-        password: string,
-    ): string {
+    public static sessionEncryption(username: string, secret: string): string {
         const hashResult = pbkdf2Sync(
-            `${password}${username}`,
-            `${username}${password}`,
+            `${secret}${username}`,
+            `${username}${secret}`,
             process.env.SESSION_HASH_ITER
                 ? Number.parseInt(process.env.SESSION_HASH_ITER, 10)
                 : 1,
@@ -135,4 +132,19 @@ export class EncryptionService {
 
         return hashResult;
     }
+
+    public static generateSessionSecret = (): string => {
+        const randomSessionSecret = randomBytes(16);
+        const currentDateSalt = Date.now().toString();
+        const sessionSecret = pbkdf2Sync(
+            `${randomSessionSecret}${currentDateSalt}`,
+            `${currentDateSalt}${randomSessionSecret}`,
+            process.env.SESSION_HASH_ITER
+                ? Number.parseInt(process.env.SESSION_HASH_ITER, 10)
+                : 1,
+            16,
+            "sha512",
+        ).toString("hex");
+        return sessionSecret;
+    };
 }
