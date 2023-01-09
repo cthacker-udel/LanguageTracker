@@ -4,6 +4,7 @@ import type { Client } from "pg";
 
 import type { BaseControllerSpec } from "../../../../common";
 import { Logger } from "../../../../common/log/Logger";
+import { rejectSession } from "../../../../common/middleware/sessionMethods";
 import type { UserService } from "../user.service";
 
 /**
@@ -235,11 +236,35 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
         }
     };
 
+    /**
+     * Test method, for debugging only
+     *
+     * @param request - testing request
+     * @param response - testing response
+     */
+    // eslint-disable-next-line require-await, class-methods-use-this -- disabled
+    public test = async (
+        request: Request,
+        response: Response,
+        // eslint-disable-next-line @typescript-eslint/require-await -- disabled
+    ): Promise<void> => {
+        try {
+            rejectSession(request, response);
+            response.status(200);
+            response.send({});
+        } catch (error: unknown) {
+            Logger.error("Failed test", error);
+            response.status(400);
+            response.send({ result: "Failed test" });
+        }
+    };
+
     public getRoutes = (): Route[] => [
         ["findByUsername", this.findUserByUsername],
         ["findByFirstName", this.findUserByFirstName],
         ["findByLastName", this.findUserByLastName],
         ["findByEmail", this.findUserByEmail],
         ["findByUserId", this.findUserByUserId],
+        ["test", this.test],
     ];
 }

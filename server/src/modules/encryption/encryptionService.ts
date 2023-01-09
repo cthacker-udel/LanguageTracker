@@ -1,3 +1,4 @@
+/* eslint-disable node/no-process-env -- disabled */
 /* eslint-disable @typescript-eslint/no-extraneous-class -- disabled */
 import { createHmac, pbkdf2Sync, randomBytes, randomInt } from "node:crypto";
 
@@ -107,6 +108,30 @@ export class EncryptionService {
                 )
                 .join("");
         }
+
+        return hashResult;
+    }
+
+    /**
+     * Encrypts the username and password into the session token to pass back to the user
+     *
+     * @param username - The username to hash
+     * @param password - The password to hash
+     * @returns The encrypted session of the username + password
+     */
+    public static sessionEncryption(
+        username: string,
+        password: string,
+    ): string {
+        const hashResult = pbkdf2Sync(
+            `${password}${username}`,
+            `${username}${password}`,
+            process.env.SESSION_HASH_ITER
+                ? Number.parseInt(process.env.SESSION_HASH_ITER, 10)
+                : 1,
+            16,
+            "sha512",
+        ).toString("hex");
 
         return hashResult;
     }

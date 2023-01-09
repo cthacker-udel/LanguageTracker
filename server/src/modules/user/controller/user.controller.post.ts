@@ -4,6 +4,7 @@ import type { Client } from "pg";
 
 import { type BaseControllerSpec, userPostSchema } from "../../../../common";
 import { Logger } from "../../../../common/log/Logger";
+import { addSession } from "../../../../common/middleware/sessionMethods";
 import type { UserService } from "../user.service";
 
 /**
@@ -89,6 +90,7 @@ export class UserControllerPost implements BaseControllerSpec<UserService> {
                     password,
                 );
                 if (loginResult) {
+                    addSession(request, response);
                     response.status(204);
                     response.send({});
                 } else {
