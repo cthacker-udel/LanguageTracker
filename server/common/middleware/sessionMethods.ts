@@ -168,6 +168,7 @@ const validateSession = async (
     if (username === undefined || !(typeof username === "string")) {
         return false;
     }
+
     const result = await userService.findUserSessionEncryptionData(
         client,
         username,
@@ -207,15 +208,11 @@ const cookieMiddleware = (
     userService: UserService,
 ): void => {
     try {
-        if (!doesSessionExist(request) && !request.url.includes("login")) {
-            response.status(401);
-            response.send({ result: "Login to use application" });
-        } else if (
-            request.url.includes("login") &&
+        if (
+            (request.url.includes("login") ||
+                request.url.includes("addUser")) &&
             !doesSessionExist(request)
         ) {
-            next();
-        } else if (request.url.includes("login") && doesSessionExist(request)) {
             next();
         } else {
             validateSession(request, client, userService)
