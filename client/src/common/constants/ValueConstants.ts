@@ -14,7 +14,13 @@ const ValueConstants = {
             required: true,
         },
     },
+    MILLISECOND: {
+        ONE_YEAR: 31_540_000_000,
+    },
     PROGRAMMINGLANGUAGEMODAL: {
+        DATE: {
+            required: true,
+        },
         DESCRIPTION: {
             maxLength: 150,
             minLength: 25,

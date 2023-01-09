@@ -1,3 +1,4 @@
+/* eslint-disable complexity -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 
 import React from "react";
@@ -12,6 +13,7 @@ import {
 } from "../../../@types";
 import type { DashboardOverlayKeys } from "../../../pages/Dashboard/Dashboard";
 import { TextConstants, ValueConstants } from "../../constants";
+import { isDateInRange } from "../../helpers";
 import styles from "./ProgrammingLanguageModal.module.css";
 
 type ActivityData = {
@@ -112,6 +114,11 @@ const activityTypeMapping: { [key: string]: ActivityType } = {
     edabit: ActivityType.EDABIT,
     languages: ActivityType.LANGUAGES,
     leetcode: ActivityType.LEETCODE,
+};
+
+const DATE_RANGES = {
+    max: Date.now() + ValueConstants.MILLISECOND.ONE_YEAR,
+    min: Date.now() - ValueConstants.MILLISECOND.ONE_YEAR,
 };
 
 /**
@@ -235,6 +242,69 @@ const ProgrammingLanguageModal = ({
             </Modal.Header>
             <Modal.Body>
                 <Form className={styles.programming_language_modal_form}>
+                    <Form.Group controlId="activityDate">
+                        <Form.Label>{"Activity Date"}</Form.Label>
+                        <InputGroup>
+                            <InputGroup.Text>
+                                <i className="fa-solid fa-calendar" />
+                            </InputGroup.Text>
+                            <Form.Control
+                                isInvalid={
+                                    dirtyFields.date &&
+                                    errors.date !== undefined
+                                }
+                                isValid={
+                                    dirtyFields.date &&
+                                    errors.date === undefined
+                                }
+                                type="date"
+                                {...register("date", {
+                                    required: {
+                                        message:
+                                            TextConstants.INVALID
+                                                .PROGRAMMINGLANGUAGEMODAL.DATE
+                                                .required,
+                                        value: ValueConstants
+                                            .PROGRAMMINGLANGUAGEMODAL.DATE
+                                            .required,
+                                    },
+                                    validate: (value: Date) => {
+                                        const dateValueInRange = isDateInRange(
+                                            DATE_RANGES.min,
+                                            DATE_RANGES.max,
+                                            value,
+                                            true,
+                                            true,
+                                        );
+                                        return (
+                                            dateValueInRange.inRange ||
+                                            (dateValueInRange.inMin
+                                                ? TextConstants.INVALID
+                                                      .PROGRAMMINGLANGUAGEMODAL
+                                                      .DATE.max
+                                                : TextConstants.INVALID
+                                                      .PROGRAMMINGLANGUAGEMODAL
+                                                      .DATE.min)
+                                        );
+                                    },
+                                    valueAsDate: true,
+                                })}
+                            />
+                            {errors.date !== undefined && dirtyFields.date && (
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.date.message}
+                                </Form.Control.Feedback>
+                            )}
+                            {errors.date === undefined && dirtyFields.date && (
+                                <Form.Control.Feedback type="valid">
+                                    {
+                                        TextConstants.VALID
+                                            .PROGRAMMINGLANGUAGEMODAL.DATE
+                                    }
+                                </Form.Control.Feedback>
+                            )}
+                        </InputGroup>
+                    </Form.Group>
                     <Form.Group controlId="activityDescription">
                         <Form.Label>{"Description"}</Form.Label>
                         <Form.Control

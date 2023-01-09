@@ -31,6 +31,11 @@ export const TextConstants = {
             },
         },
         PROGRAMMINGLANGUAGEMODAL: {
+            DATE: {
+                max: "Activity Date cannot be more than 1 year in the future",
+                min: "Activity Date cannot be less than 1 year ago",
+                required: "Activity Date is required",
+            },
             DESCRIPTION: {
                 maxLength: "Description cannot be more than 150 characters",
                 minLength: "Description must contain at least 25 characters",
@@ -109,6 +114,7 @@ export const TextConstants = {
             USERNAME: "Username is valid!",
         },
         PROGRAMMINGLANGUAGEMODAL: {
+            DATE: "Activity Date is valid!",
             DESCRIPTION: "Description is valid!",
             LANGUAGE: "Language is valid!",
             LEVEL: "Level is valid!",
