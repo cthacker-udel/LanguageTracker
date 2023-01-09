@@ -15,6 +15,7 @@ import { TextConstants, ValueConstants } from "../../constants";
 import styles from "./ProgrammingLanguageModal.module.css";
 
 type ActivityData = {
+    date: Date;
     description: string;
     language: ActivityLanguage;
     level: ActivityLevel;
@@ -35,6 +36,7 @@ type ProgrammingLanguageModalProperties = {
 };
 
 const initialValues: ActivityData = {
+    date: new Date(),
     description: "",
     language: ActivityLanguage.NONE,
     level: ActivityLevel.NONE,
