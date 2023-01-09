@@ -7,11 +7,11 @@ import type {
 
 export type Activity = {
     description: string;
-    language: ActivityLanguage;
-    level: ActivityLevel;
+    language_type: ActivityLanguage;
+    activity_level: ActivityLevel;
     link: string;
     title: string;
-    totalTime: number;
-    totalTimeMeasurement: TimeMeasurement;
-    type: ActivityType;
+    total_time: number;
+    time_type: TimeMeasurement;
+    activity_type: ActivityType;
 };

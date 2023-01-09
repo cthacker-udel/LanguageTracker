@@ -2,10 +2,14 @@
 /* eslint-disable brace-style -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import type { Activity, Route } from "@types";
-import { type BaseControllerSpec, Logger } from "common";
 import type { Request, Response } from "express";
 import type { Client } from "pg";
 
+import {
+    type BaseControllerSpec,
+    activityPostSchema,
+    Logger,
+} from "../../../../common";
 import type { ActivityService } from "../service/activity.service";
 
 /**
@@ -37,41 +41,66 @@ export class ActivityControllerPost
         try {
             const {
                 description,
-                language,
-                level,
+                language_type,
+                activity_level,
                 title,
-                totalTime,
-                totalTimeMeasurement,
-                type,
-            } = request.body as Activity;
+                total_time,
+                time_type,
+                activity_type,
+                username,
+            } = request.body as Activity & { username: string };
+            const validationResult = activityPostSchema.validate(
+                request.body as Activity & { username: string },
+            );
+            console.log(
+                title,
+                description,
+                activity_level,
+                total_time,
+                time_type,
+                language_type,
+                activity_type,
+                validationResult.error,
+            );
             if (
                 title === undefined ||
                 description === undefined ||
-                level === undefined ||
-                totalTime === undefined ||
-                totalTimeMeasurement === undefined ||
-                type === undefined ||
-                language === undefined
+                activity_level === undefined ||
+                total_time === undefined ||
+                time_type === undefined ||
+                activity_type === undefined ||
+                language_type === undefined ||
+                username === undefined ||
+                validationResult.error !== undefined
             ) {
+                const constructedErrorResponse: {
+                    result: string;
+                    error?: string;
+                } = { result: failureMessage };
+                if (validationResult.error !== undefined) {
+                    constructedErrorResponse.error =
+                        validationResult.error.message;
+                }
                 response.status(400);
-                response.send({ failureMessage });
+                response.send(constructedErrorResponse);
             } else {
                 const addingActivityResult = await this.service.addActivity(
                     this.client,
                     request.body as Activity,
+                    username,
                 );
                 if (addingActivityResult) {
                     response.status(204);
                     response.send({});
                 } else {
                     response.status(400);
-                    response.send({ failureMessage });
+                    response.send({ result: failureMessage });
                 }
             }
         } catch (error: unknown) {
             Logger.error(failureMessage, error);
             response.status(400);
-            response.send({ failureMessage });
+            response.send({ result: failureMessage });
         }
     };
 

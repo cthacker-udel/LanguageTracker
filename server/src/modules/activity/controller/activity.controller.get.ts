@@ -2,11 +2,11 @@
 /* eslint-disable brace-style -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 
-import type { Route } from "@types";
-import { BaseControllerSpec, Logger } from "common";
-import { Request, Response } from "express";
+import type { Activity, Route } from "@types";
+import type { Request, Response } from "express";
 import type { Client } from "pg";
 
+import { type BaseControllerSpec, Logger } from "../../../../common";
 import type { ActivityService } from "../service/activity.service";
 
 /**
@@ -35,12 +35,30 @@ export class ActivityControllerGet
         response: Response,
     ): Promise<void> => {
         const failureMessage = "Failed searching for activity";
+        const failedSearchMessage = "Failed finding activity, does not exist.";
         try {
             const { id } = request.query;
+            if (id === undefined) {
+                response.status(400);
+                response.send({ result: failedSearchMessage });
+            } else {
+                const result: Activity | undefined =
+                    await this.service.findActivity(
+                        this.client,
+                        Number.parseInt(id as string, 10),
+                    );
+                if (result === undefined) {
+                    response.status(400);
+                    response.send({ result: failedSearchMessage });
+                } else {
+                    response.status(200);
+                    response.send({ result });
+                }
+            }
         } catch (error: unknown) {
             Logger.error("Error while searching for activity", error);
             response.status(400);
-            response.send({ failureMessage });
+            response.send({ result: failureMessage });
         }
     };
 

@@ -40,8 +40,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
             if (username === undefined) {
                 response.status(400);
                 response.send({
-                    failureMessage:
-                        "Must supply username with request to find user",
+                    result: "Must supply username with request to find user",
                 });
             } else {
                 const foundUser: Partial<User> | undefined =
@@ -52,7 +51,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
                 if (foundUser === undefined) {
                     response.status(400);
                     response.send({
-                        failureMessage: "Unable to find user via username",
+                        result: "Unable to find user via username",
                     });
                 } else {
                     response.status(200);
@@ -63,7 +62,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
             Logger.error("Error while searching for username", error);
             response.status(400);
             response.send({
-                failureMessage: "Error searching for user via username",
+                result: "Error searching for user via username",
             });
         }
     };
@@ -83,8 +82,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
             if (firstName === undefined) {
                 response.status(400);
                 response.send({
-                    failureMessage:
-                        "Must supply firstName with request to find user",
+                    result: "Must supply firstName with request to find user",
                 });
             } else {
                 const foundUser: Partial<User[]> | undefined =
@@ -95,7 +93,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
                 if (foundUser === undefined) {
                     response.status(400);
                     response.send({
-                        failureMessage: "Unable to find user via firstName",
+                        result: "Unable to find user via firstName",
                     });
                 } else {
                     response.status(200);
@@ -106,7 +104,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
             Logger.error("Error while searching for firstName", error);
             response.status(400);
             response.send({
-                failureMessage: "Error searching for user via firstName",
+                result: "Error searching for user via firstName",
             });
         }
     };
@@ -126,8 +124,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
             if (lastName === undefined) {
                 response.status(400);
                 response.send({
-                    failureMessage:
-                        "Must supply lastName with request to find user",
+                    result: "Must supply lastName with request to find user",
                 });
             } else {
                 const foundUser: Partial<User[]> | undefined =
@@ -138,7 +135,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
                 if (foundUser === undefined) {
                     response.status(400);
                     response.send({
-                        failureMessage: "Unable to find user via lastName",
+                        result: "Unable to find user via lastName",
                     });
                 } else {
                     response.status(200);
@@ -149,7 +146,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
             Logger.error("Error while searching for lastName", error);
             response.status(400);
             response.send({
-                failureMessage: "Error searching for user via lastName",
+                result: "Error searching for user via lastName",
             });
         }
     };
@@ -169,8 +166,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
             if (email === undefined) {
                 response.status(400);
                 response.send({
-                    failureMessage:
-                        "Must supply email with request to find user",
+                    result: "Must supply email with request to find user",
                 });
             } else {
                 const foundUser: Partial<User> | undefined =
@@ -181,7 +177,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
                 if (foundUser === undefined) {
                     response.status(400);
                     response.send({
-                        failureMessage: "Unable to find user via email",
+                        result: "Unable to find user via email",
                     });
                 } else {
                     response.status(200);
@@ -192,7 +188,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
             Logger.error("Error while searching for email", error);
             response.status(400);
             response.send({
-                failureMessage: "Error searching for user via email",
+                result: "Error searching for user via email",
             });
         }
     };
@@ -212,8 +208,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
             if (userId === undefined) {
                 response.status(400);
                 response.send({
-                    failureMessage:
-                        "Must supply userId with request to find user",
+                    result: "Must supply userId with request to find user",
                 });
             } else {
                 const foundUser: Partial<User> | undefined =
@@ -224,7 +219,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
                 if (foundUser === undefined) {
                     response.status(400);
                     response.send({
-                        failureMessage: "Unable to find user via userId",
+                        result: "Unable to find user via userId",
                     });
                 } else {
                     response.status(200);
@@ -235,7 +230,7 @@ export class UserControllerGet implements BaseControllerSpec<UserService> {
             Logger.error("Error while searching for userId", error);
             response.status(400);
             response.send({
-                failureMessage: "Error searching for user via userId",
+                result: "Error searching for user via userId",
             });
         }
     };

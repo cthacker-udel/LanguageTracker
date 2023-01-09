@@ -1,12 +1,30 @@
-import type { ActivityLevel, TimeMeasurement } from "./ActivityEnums";
+import type {
+    ActivityLanguage,
+    ActivityLevel,
+    ActivityType,
+    TimeMeasurement,
+} from "./ActivityEnums";
 
 type ActivityData = {
-    title: string;
     description: string;
-    link: string;
-    totalTime: string;
-    totalTimeMeasurement: TimeMeasurement;
+    language: ActivityLanguage;
     level: ActivityLevel;
+    link: string;
+    title: string;
+    totalTime: number;
+    totalTimeMeasurement: TimeMeasurement;
+    type?: ActivityType;
 };
 
-export type { ActivityData };
+type APICompliantActivity = {
+    activity_level: number;
+    activity_type: number;
+    description: string;
+    language_type: number;
+    link: string;
+    title: string;
+    time_type: number;
+    total_time: number;
+};
+
+export type { ActivityData, APICompliantActivity };

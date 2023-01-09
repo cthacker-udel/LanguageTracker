@@ -12,4 +12,8 @@ export class BaseService {
     public constructor(tableName: string) {
         this.TABLE_NAME = `"${tableName}"`;
     }
+
+    public setTableName = (tableName: string): void => {
+        this.TABLE_NAME = `"${tableName}"`;
+    };
 }

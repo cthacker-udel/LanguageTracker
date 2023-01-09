@@ -1,3 +1,4 @@
+/* eslint-disable camelcase -- disabled */
 import React from "react";
 import { Button, Image, OverlayTrigger } from "react-bootstrap";
 import type { OverlayTriggerRenderProps } from "react-bootstrap/esm/OverlayTrigger";
@@ -18,8 +19,10 @@ import type { ActivityType } from "../../@types";
 import {
     type ActivityData,
     capitalize,
+    databasetiseActivity,
     ProgrammingLanguageModal,
 } from "../../common";
+import { ServerSideApi } from "../../common/api";
 import { renderTooltip } from "../../common/helpers/renderTooltip";
 import codewarsLogo from "./codewarslogo.svg";
 import styles from "./Dashboard.module.css";
@@ -540,15 +543,22 @@ const Dashboard = (): JSX.Element => {
                         triggerOverlay(key);
                     }
                 }}
-                onSubmit={(
+                onSubmit={async (
                     key: ActivityType,
                     values: Partial<ActivityData>,
-                ): void => {
+                ): Promise<void> => {
                     const validDashboardKey = gatherValidDashboardOverlayKey();
                     if (validDashboardKey !== undefined) {
                         triggerOverlay(validDashboardKey);
                     }
-                    console.log(key, values);
+                    const addActivityResult = await ServerSideApi.post(
+                        "/activity/addActivity",
+                        databasetiseActivity({
+                            ...values,
+                            type: key,
+                        } as ActivityData),
+                    );
+                    console.log(addActivityResult);
                 }}
                 programmingLanguageImage={gatherImageFromValidDashboardOverlayKey()}
                 title={`Add ${capitalize(
