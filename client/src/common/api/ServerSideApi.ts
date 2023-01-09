@@ -42,7 +42,8 @@ export class ServerSideApi {
                 `${ServerSideApi.BASE_URL}${url}`,
                 {
                     body: JSON.stringify(body ?? {}),
-                    headers: headers ?? {},
+                    credentials: "include",
+                    headers,
                     method: "POST",
                 },
             );

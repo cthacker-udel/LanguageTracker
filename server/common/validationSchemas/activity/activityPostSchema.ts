@@ -7,7 +7,7 @@ export const activityPostSchema = Joi.object({
     activity_type: Joi.number().required(),
     description: Joi.string().max(150).optional(),
     language_type: Joi.number().required(),
-    link: Joi.string().optional().max(200),
+    link: Joi.string().optional().max(200).min(0),
     time_type: Joi.number().required(),
     title: Joi.string().required().max(75),
     total_time: Joi.number().required(),

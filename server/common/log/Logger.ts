@@ -13,7 +13,7 @@ export class Logger {
      */
     public static log = (message: string, error?: unknown): void => {
         console.log(
-            `${new Date().toTimeString()} --$ [${message}] | ${
+            `${new Date().toString()} --$ [${message}] | ${
                 (error as Error).stack
             }`,
         );

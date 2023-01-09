@@ -164,6 +164,10 @@ const validateSession = async (
     client: Client,
     userService: UserService,
 ): Promise<boolean> => {
+    if (request.method === "OPTIONS") {
+        return true;
+    }
+
     const username = getSessionUsername(request);
     if (username === undefined || !(typeof username === "string")) {
         return false;
@@ -220,12 +224,14 @@ const cookieMiddleware = (
                     if (result) {
                         next();
                     } else {
+                        Logger.log("unauthorized");
                         rejectSession(request, response);
                         response.status(401);
                         response.send({ result: "Unauthorized" });
                     }
                 })
                 .catch((error: unknown) => {
+                    Logger.log("unauthorized");
                     rejectSession(request, response);
                     Logger.error("Failed to validate session cookie", error);
                     response.status(401);

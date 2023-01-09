@@ -20,6 +20,7 @@ import {
     type ActivityData,
     capitalize,
     databasetiseActivity,
+    getUsername,
     ProgrammingLanguageModal,
 } from "../../common";
 import { ServerSideApi } from "../../common/api";
@@ -551,12 +552,17 @@ const Dashboard = (): JSX.Element => {
                     if (validDashboardKey !== undefined) {
                         triggerOverlay(validDashboardKey);
                     }
+                    const username = getUsername(document);
+                    console.log("username =", username);
                     const addActivityResult = await ServerSideApi.post(
                         "/activity/addActivity",
-                        databasetiseActivity({
-                            ...values,
-                            type: key,
-                        } as ActivityData),
+                        {
+                            ...databasetiseActivity({
+                                ...values,
+                                type: key,
+                            } as ActivityData),
+                            username,
+                        },
                     );
                     console.log(addActivityResult);
                 }}

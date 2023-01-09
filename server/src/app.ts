@@ -1,3 +1,4 @@
+/* eslint-disable node/no-process-env -- disabled */
 /* eslint-disable import/no-namespace -- disabled as specific usage of this dependency requires wildcard import */
 /* eslint-disable no-console -- needed for connecting to database */
 import cors from "cors";
@@ -78,7 +79,13 @@ class LanguageTrackerApplication {
                 );
             },
         );
-        this.app.use(cors({ methods: ["GET", "PUT", "POST"], origin: true }));
+        this.app.use(
+            cors({
+                credentials: true,
+                methods: ["GET", "PUT", "POST"],
+                origin: `${process.env.CLIENT_URL}`,
+            }),
+        );
         this.app.use(express.urlencoded({ extended: false }));
         this.app.use(express.json());
     }
