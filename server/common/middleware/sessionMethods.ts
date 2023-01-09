@@ -244,5 +244,8 @@ export {
     CONSTANTS,
     cookieMiddleware,
     doesSessionExist,
+    getSession,
+    getSessionCookie,
+    getSessionUsername,
     rejectSession,
 };

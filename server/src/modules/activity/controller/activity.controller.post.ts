@@ -8,6 +8,7 @@ import type { Client } from "pg";
 import {
     type BaseControllerSpec,
     activityPostSchema,
+    analyzeUser,
     Logger,
 } from "../../../../common";
 import type { ActivityService } from "../service/activity.service";
@@ -49,43 +50,51 @@ export class ActivityControllerPost
                 activity_type,
                 username,
             } = request.body as Activity & { username: string };
-            const validationResult = activityPostSchema.validate(
-                request.body as Activity & { username: string },
-            );
-            if (
-                title === undefined ||
-                description === undefined ||
-                activity_level === undefined ||
-                total_time === undefined ||
-                time_type === undefined ||
-                activity_type === undefined ||
-                language_type === undefined ||
-                username === undefined ||
-                validationResult.error !== undefined
-            ) {
-                const constructedErrorResponse: {
-                    result: string;
-                    error?: string;
-                } = { result: failureMessage };
-                if (validationResult.error !== undefined) {
-                    constructedErrorResponse.error =
-                        validationResult.error.message;
-                }
-                response.status(400);
-                response.send(constructedErrorResponse);
-            } else {
-                const addingActivityResult = await this.service.addActivity(
-                    this.client,
-                    request.body as Activity,
-                    username,
+            const isSameUsername = analyzeUser(request, username);
+            if (isSameUsername) {
+                const validationResult = activityPostSchema.validate(
+                    request.body as Activity & { username: string },
                 );
-                if (addingActivityResult) {
-                    response.status(204);
-                    response.send({});
-                } else {
+                if (
+                    title === undefined ||
+                    description === undefined ||
+                    activity_level === undefined ||
+                    total_time === undefined ||
+                    time_type === undefined ||
+                    activity_type === undefined ||
+                    language_type === undefined ||
+                    username === undefined ||
+                    validationResult.error !== undefined
+                ) {
+                    const constructedErrorResponse: {
+                        result: string;
+                        error?: string;
+                    } = { result: failureMessage };
+                    if (validationResult.error !== undefined) {
+                        constructedErrorResponse.error =
+                            validationResult.error.message;
+                    }
                     response.status(400);
-                    response.send({ result: failureMessage });
+                    response.send(constructedErrorResponse);
+                } else {
+                    const addingActivityResult = await this.service.addActivity(
+                        this.client,
+                        request.body as Activity,
+                        username,
+                    );
+                    if (addingActivityResult) {
+                        response.status(204);
+                        response.send({});
+                    } else {
+                        response.status(400);
+                        response.send({ result: failureMessage });
+                    }
                 }
+            } else {
+                response.status(401);
+                response.send({
+                    result: "Must make request with username within cookie",
+                });
             }
         } catch (error: unknown) {
             Logger.error(failureMessage, error);
