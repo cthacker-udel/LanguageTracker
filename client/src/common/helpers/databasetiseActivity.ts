@@ -20,5 +20,6 @@ export const databasetiseActivity = (
     apiActivity.language_type = activity.language;
     apiActivity.activity_type = activity.type;
     apiActivity.link = activity.link;
+    apiActivity.activity_date = activity.date;
     return apiActivity as APICompliantActivity;
 };

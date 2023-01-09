@@ -725,7 +725,8 @@ const ProgrammingLanguageModal = ({
                         !dirtyFields.language ||
                         !dirtyFields.level ||
                         !dirtyFields.totalTime ||
-                        !dirtyFields.totalTimeMeasurement
+                        !dirtyFields.totalTimeMeasurement ||
+                        !dirtyFields.date
                     }
                     onClick={(): void => {
                         if (

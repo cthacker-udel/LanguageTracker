@@ -6,6 +6,7 @@ import type {
 } from "./ActivityEnums";
 
 type ActivityData = {
+    date: Date;
     description: string;
     language: ActivityLanguage;
     level: ActivityLevel;
@@ -19,6 +20,7 @@ type ActivityData = {
 type APICompliantActivity = {
     activity_level: number;
     activity_type: number;
+    activity_date: Date;
     description: string;
     language_type: number;
     link: string;
