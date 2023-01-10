@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
 /* eslint-disable camelcase -- disabled */
+
 import React from "react";
 import { Button, Image, OverlayTrigger } from "react-bootstrap";
 import type { OverlayTriggerRenderProps } from "react-bootstrap/esm/OverlayTrigger";
-import GridLoader from "react-spinners/GridLoader";
 import {
     Area,
     AreaChart,
@@ -64,7 +64,7 @@ const initialOverlays: DashboardOverlays = {
  * @returns Dashboard component, which houses all the logic for starting your account in the language tracker
  */
 const Dashboard = (): JSX.Element => {
-    const { data: activities, isLoading } = useSwr<APICompliantActivity[]>(
+    const { data: activities } = useSwr<APICompliantActivity[]>(
         `/api/activity/dashboard?currentday='${new Date().toDateString()}'`,
     );
 
