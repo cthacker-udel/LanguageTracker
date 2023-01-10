@@ -30,6 +30,8 @@ root.render(
                             response.json(),
                     ),
                 provider: (): Map<any, any> => new Map(),
+                refreshInterval: 5000,
+                revalidateOnMount: true,
             }}
         >
             <BrowserRouter>
