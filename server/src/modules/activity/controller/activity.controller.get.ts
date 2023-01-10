@@ -67,10 +67,8 @@ export class ActivityControllerGet
         response: Response,
     ): Promise<void> => {
         const failureMessage = "Failed searching for dashboard activities";
-        console.log("hit controller");
         try {
             const { currentday } = request.query;
-            console.log("currentday =", currentday, request.url, request.query);
             if (currentday === undefined) {
                 response.status(400);
                 response.send({ result: failureMessage });
