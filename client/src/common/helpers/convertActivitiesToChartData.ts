@@ -76,9 +76,11 @@ export const convertActivitiesToChartData = (
     }
 
     for (let index = 0; index < 7; index += 1) {
-        activityChartData[index].averageTime =
-            activityChartData[index].totalTime /
-            activityChartData[index].numberProblems;
+        if (activityChartData[index].numberProblems > 0) {
+            activityChartData[index].averageTime =
+                activityChartData[index].totalTime /
+                activityChartData[index].numberProblems;
+        }
     }
 
     return activityChartData;

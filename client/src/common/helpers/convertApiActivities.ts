@@ -2,7 +2,6 @@
 /* eslint-disable no-confusing-arrow -- disabled */
 import type {
     ActivityChartData,
-    ActivityData,
     ActivityLanguage,
     ActivityLevel,
     ActivityType,

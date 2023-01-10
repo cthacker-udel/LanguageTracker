@@ -175,51 +175,6 @@ const Dashboard = (): JSX.Element => {
         }
     }, [activityBucket]);
 
-    const chartData = [
-        {
-            averageTime: 350,
-            day: "Monday",
-            numberProblems: 70,
-            totalTime: 28_000,
-        },
-        {
-            averageTime: 700,
-            day: "Tuesday",
-            numberProblems: 25,
-            totalTime: 17_500,
-        },
-        {
-            averageTime: 1000,
-            day: "Wednesday",
-            numberProblems: 30,
-            totalTime: 30_000,
-        },
-        {
-            averageTime: 850,
-            day: "Thursday",
-            numberProblems: 45,
-            totalTime: 38_250,
-        },
-        {
-            averageTime: 250,
-            day: "Friday",
-            numberProblems: 50,
-            totalTime: 12_500,
-        },
-        {
-            averageTime: 700,
-            day: "Saturday",
-            numberProblems: 75,
-            totalTime: 52_500,
-        },
-        {
-            averageTime: 800,
-            day: "Sunday",
-            numberProblems: 80,
-            totalTime: 64_000,
-        },
-    ];
-
     return (
         <>
             <div className={styles.dashboard_title}>
@@ -301,7 +256,7 @@ const Dashboard = (): JSX.Element => {
                                 width="50%"
                             >
                                 <ComposedChart
-                                    data={chartData}
+                                    data={codewarsActivities}
                                     height={250}
                                     width={700}
                                 >
@@ -361,7 +316,7 @@ const Dashboard = (): JSX.Element => {
                             width="50%"
                         >
                             <AreaChart
-                                data={chartData}
+                                data={edabitActivities}
                                 height={250}
                                 width={500}
                             >
@@ -389,7 +344,7 @@ const Dashboard = (): JSX.Element => {
                             width="50%"
                         >
                             <ComposedChart
-                                data={chartData}
+                                data={edabitActivities}
                                 height={250}
                                 width={700}
                             >
@@ -451,7 +406,7 @@ const Dashboard = (): JSX.Element => {
                             width="50%"
                         >
                             <AreaChart
-                                data={chartData}
+                                data={leetcodeActivities}
                                 height={250}
                                 width={500}
                             >
@@ -479,7 +434,7 @@ const Dashboard = (): JSX.Element => {
                             width="50%"
                         >
                             <ComposedChart
-                                data={chartData}
+                                data={leetcodeActivities}
                                 height={250}
                                 width={700}
                             >
@@ -541,7 +496,7 @@ const Dashboard = (): JSX.Element => {
                             width="50%"
                         >
                             <AreaChart
-                                data={chartData}
+                                data={languagesActivities}
                                 height={250}
                                 width={500}
                             >
@@ -569,7 +524,7 @@ const Dashboard = (): JSX.Element => {
                             width="50%"
                         >
                             <ComposedChart
-                                data={chartData}
+                                data={languagesActivities}
                                 height={250}
                                 width={700}
                             >
