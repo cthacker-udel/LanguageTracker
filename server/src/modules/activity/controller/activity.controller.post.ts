@@ -41,6 +41,7 @@ export class ActivityControllerPost
         const failureMessage = "Failed to add an activity";
         try {
             const {
+                activity_date,
                 description,
                 language_type,
                 activity_level,
@@ -56,6 +57,7 @@ export class ActivityControllerPost
                     request.body as Activity & { username: string },
                 );
                 if (
+                    activity_date === undefined ||
                     title === undefined ||
                     description === undefined ||
                     activity_level === undefined ||

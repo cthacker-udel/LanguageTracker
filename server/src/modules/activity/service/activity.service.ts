@@ -139,7 +139,7 @@ export class ActivityService extends BaseService {
             activity.description === undefined ? "" : "description,"
         } activity_type, total_time, time_type, language_type, activity_level, ${
             activity.link === undefined ? "" : "link,"
-        } user_id) VALUES `;
+        } activity_date, user_id) VALUES `;
         const insertionValues = `('${activity.title}', ${
             activity.description === undefined
                 ? ""
@@ -148,7 +148,9 @@ export class ActivityService extends BaseService {
             activity.time_type
         }, ${activity.language_type}, ${activity.activity_level}, ${
             activity.link === undefined ? "" : `'${activity.link}',`
-        } ${foundUser.user_id});`;
+        } to_timestamp(${new Date(activity.activity_date).getTime() / 1000}), ${
+            foundUser.user_id
+        });`;
 
         const insertionQuery = `${insertionSetup}${insertionValues}`;
 

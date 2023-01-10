@@ -3,6 +3,7 @@
 import Joi from "joi";
 
 export const activityPostSchema = Joi.object({
+    activity_date: Joi.date().required(),
     activity_level: Joi.number().required(),
     activity_type: Joi.number().required(),
     description: Joi.string().max(150).optional(),

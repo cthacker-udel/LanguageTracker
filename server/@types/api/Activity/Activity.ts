@@ -6,6 +6,7 @@ import type {
 } from "./ActivityEnums";
 
 export type Activity = {
+    activity_date: Date;
     description: string;
     language_type: ActivityLanguage;
     activity_level: ActivityLevel;
