@@ -62,5 +62,41 @@ export class ActivityControllerGet
         }
     };
 
-    public getRoutes = (): Route[] => [["findActivity", this.findActivity]];
+    public getDashboardActivities = async (
+        request: Request,
+        response: Response,
+    ): Promise<void> => {
+        const failureMessage = "Failed searching for dashboard activities";
+        console.log("hit controller");
+        try {
+            const { currentday } = request.query;
+            console.log("currentday =", currentday, request.url, request.query);
+            if (currentday === undefined) {
+                response.status(400);
+                response.send({ result: failureMessage });
+            } else {
+                const result: Activity[] =
+                    await this.service.getDashboardActivities(
+                        this.client,
+                        new Date(currentday as string),
+                    );
+                if (result.length === 0) {
+                    response.status(204);
+                    response.send({});
+                } else {
+                    response.status(200);
+                    response.send(result);
+                }
+            }
+        } catch (error: unknown) {
+            Logger.error(failureMessage, error);
+            response.status(400);
+            response.send({ result: failureMessage });
+        }
+    };
+
+    public getRoutes = (): Route[] => [
+        ["findActivity", this.findActivity],
+        ["dashboard", this.getDashboardActivities],
+    ];
 }

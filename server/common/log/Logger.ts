@@ -14,7 +14,7 @@ export class Logger {
     public static log = (message: string, error?: unknown): void => {
         console.log(
             `${new Date().toString()} --$ [${message}] | ${
-                (error as Error).stack
+                (error as Error)?.stack
             }`,
         );
     };
@@ -28,7 +28,7 @@ export class Logger {
     public static info = (message: string, error?: unknown): void => {
         console.info(
             `${new Date().toTimeString()} --$ [${message}] | ${
-                (error as Error).stack
+                (error as Error)?.stack
             }`,
         );
     };
@@ -42,7 +42,7 @@ export class Logger {
     public static debug = (message: string, error?: unknown): void => {
         console.debug(
             `${new Date().toTimeString()} --$ [${message}] | ${
-                (error as Error).stack
+                (error as Error)?.stack
             }`,
         );
     };
@@ -56,7 +56,7 @@ export class Logger {
     public static error = (message: string, error?: unknown): void => {
         console.error(
             `${new Date().toTimeString()} --$ [${message}] | ${
-                (error as Error).stack
+                (error as Error)?.stack
             }`,
         );
     };

@@ -4,7 +4,8 @@ import type { Activity } from "@types";
 import type { Client } from "pg";
 import type { UserService } from "src/modules/user/user.service";
 
-import { BaseService } from "../../../../common";
+import { BaseService, psqlizeDate } from "../../../../common";
+import { generateDateRange } from "../../../../common/helpers/generateDateRange";
 
 /**
  *
@@ -156,5 +157,21 @@ export class ActivityService extends BaseService {
 
         const insertResult = await client.query(insertionQuery);
         return insertResult.rowCount > 0;
+    };
+
+    public getDashboardActivities = async (
+        client: Client,
+        currentDate: Date,
+    ): Promise<Activity[]> => {
+        this.setTableName("ACTIVITY");
+        const [startDate, endDate] = generateDateRange(currentDate);
+        const dateQuery = `SELECT * FROM "ACTIVITY" WHERE activity_date BETWEEN ${psqlizeDate(
+            startDate,
+        )} AND ${psqlizeDate(endDate)}`;
+
+        const queryResult = await client.query(dateQuery);
+
+        console.log(queryResult);
+        return [];
     };
 }

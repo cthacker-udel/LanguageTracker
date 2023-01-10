@@ -1,3 +1,4 @@
+/* eslint-disable require-await -- disabled */
 /* eslint-disable @typescript-eslint/no-explicit-any -- disabled for swr cache implementation */
 /* eslint-disable jest/require-hook -- disabled */
 import "./index.css";
@@ -18,7 +19,20 @@ const root = ReactDOM.createRoot(
 
 root.render(
     <React.StrictMode>
-        <SWRConfig value={{ provider: (): Map<any, any> => new Map() }}>
+        <SWRConfig
+            value={{
+                fetcher: async (resource, init): Promise<Response> =>
+                    fetch(`http://localhost:3001${resource}`, {
+                        ...init,
+                        credentials: "include",
+                    }).then(
+                        async (response: Response): Promise<any> =>
+                            response.json(),
+                    ),
+                provider: (): Map<any, any> => new Map(),
+                refreshInterval: 3000,
+            }}
+        >
             <BrowserRouter>
                 <NotificationProvider>
                     <Routes>

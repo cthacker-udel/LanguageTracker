@@ -14,8 +14,9 @@ import {
     XAxis,
     YAxis,
 } from "recharts";
+import useSwr from "swr";
 
-import type { ActivityType } from "../../@types";
+import type { ActivityType, APICompliantActivity } from "../../@types";
 import {
     type ActivityData,
     capitalize,
@@ -53,6 +54,10 @@ const initialOverlays: DashboardOverlays = {
  * @returns Dashboard component, which houses all the logic for starting your account in the language tracker
  */
 const Dashboard = (): JSX.Element => {
+    const { data: activities } = useSwr<APICompliantActivity[]>(
+        `/api/activity/dashboard?currentday='${new Date().toDateString()}'`,
+    );
+    console.log(activities);
     const [overlays, setOverlays] =
         React.useState<DashboardOverlays>(initialOverlays);
 
