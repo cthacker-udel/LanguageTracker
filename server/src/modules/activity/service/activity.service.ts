@@ -171,7 +171,6 @@ export class ActivityService extends BaseService {
 
         const queryResult = await client.query(dateQuery);
 
-        console.log(queryResult);
-        return [];
+        return queryResult.rows;
     };
 }

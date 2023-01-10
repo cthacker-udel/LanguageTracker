@@ -122,9 +122,6 @@ const addSession = async (
     client: Client,
     userService: UserService,
 ): Promise<boolean> => {
-    if (doesSessionExist(request) || !request.url.includes("login")) {
-        return false;
-    }
     const { username } = request.body as Partial<User>;
     if (username === undefined) {
         return false;
@@ -147,9 +144,11 @@ const addSession = async (
 
     response.cookie(CONSTANTS.COOKIE_KEY, encryptedSession, {
         expires: generateCookieExpiration(),
+        sameSite: "lax",
     });
     response.cookie(CONSTANTS.USERNAME_KEY, username, {
         expires: generateCookieExpiration(),
+        sameSite: "lax",
     });
 
     return true;

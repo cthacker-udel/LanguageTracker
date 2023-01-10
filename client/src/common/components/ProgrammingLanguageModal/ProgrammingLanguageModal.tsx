@@ -6,6 +6,7 @@ import { Button, Form, InputGroup, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
 import {
+    type ActivityData,
     ActivityLanguage,
     ActivityLevel,
     ActivityType,
@@ -15,18 +16,6 @@ import type { DashboardOverlayKeys } from "../../../pages/Dashboard/Dashboard";
 import { TextConstants, ValueConstants } from "../../constants";
 import { isDateInRange } from "../../helpers";
 import styles from "./ProgrammingLanguageModal.module.css";
-
-type ActivityData = {
-    date: Date;
-    description: string;
-    language: ActivityLanguage;
-    level: ActivityLevel;
-    link: string;
-    title: string;
-    totalTime: number;
-    totalTimeMeasurement: TimeMeasurement;
-    type?: ActivityType;
-};
 
 type ProgrammingLanguageModalProperties = {
     display: boolean;
@@ -133,7 +122,7 @@ const DATE_RANGES = {
  * @param props.title - The title of the modal
  * @returns The Programming Language Modal
  */
-const ProgrammingLanguageModal = ({
+export const ProgrammingLanguageModal = ({
     display,
     dashboardKey,
     programmingLanguageImage,
@@ -747,5 +736,3 @@ const ProgrammingLanguageModal = ({
         </Modal>
     );
 };
-
-export { type ActivityData, ProgrammingLanguageModal };

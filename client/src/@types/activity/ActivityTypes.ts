@@ -17,6 +17,13 @@ type ActivityData = {
     type?: ActivityType;
 };
 
+type ActivityChartData = {
+    averageTime: number;
+    day: string;
+    numberProblems: number;
+    totalTime: number;
+};
+
 type APICompliantActivity = {
     activity_level: number;
     activity_type: number;
@@ -29,4 +36,4 @@ type APICompliantActivity = {
     total_time: number;
 };
 
-export type { ActivityData, APICompliantActivity };
+export type { ActivityChartData, ActivityData, APICompliantActivity };

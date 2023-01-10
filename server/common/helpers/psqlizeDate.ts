@@ -5,4 +5,4 @@
  * @returns The psql compliant date
  */
 export const psqlizeDate = (date: Date): string =>
-    `'${date.getFullYear()}-${date.getMonth()}-${date.getDate()}'`;
+    `'${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}'`;

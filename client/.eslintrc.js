@@ -263,7 +263,7 @@ module.exports = {
         "no-shadow-restricted-names": "error",
         "no-undef-init": "error",
         "no-unused-vars": [
-            "error",
+            "warn",
             {
                 varsIgnorePattern: "^_",
                 argsIgnorePattern: "^_",

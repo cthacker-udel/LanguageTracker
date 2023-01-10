@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/indent -- disabled */
 /* eslint-disable camelcase -- disabled */
 import React from "react";
 import { Button, Image, OverlayTrigger } from "react-bootstrap";
 import type { OverlayTriggerRenderProps } from "react-bootstrap/esm/OverlayTrigger";
+import GridLoader from "react-spinners/GridLoader";
 import {
     Area,
     AreaChart,
@@ -16,15 +18,22 @@ import {
 } from "recharts";
 import useSwr from "swr";
 
-import type { ActivityType, APICompliantActivity } from "../../@types";
+import type {
+    ActivityChartData,
+    ActivityData,
+    ActivityType,
+    APICompliantActivity,
+} from "../../@types";
 import {
-    type ActivityData,
+    type ActivityBucket,
+    bucketizeActivities,
     capitalize,
     databasetiseActivity,
     getUsername,
     ProgrammingLanguageModal,
 } from "../../common";
 import { ServerSideApi } from "../../common/api";
+import { convertApiActivities } from "../../common/helpers/convertApiActivities";
 import { renderTooltip } from "../../common/helpers/renderTooltip";
 import codewarsLogo from "./codewarslogo.svg";
 import styles from "./Dashboard.module.css";
@@ -54,10 +63,29 @@ const initialOverlays: DashboardOverlays = {
  * @returns Dashboard component, which houses all the logic for starting your account in the language tracker
  */
 const Dashboard = (): JSX.Element => {
-    const { data: activities } = useSwr<APICompliantActivity[]>(
+    const { data: activities, isLoading } = useSwr<APICompliantActivity[]>(
         `/api/activity/dashboard?currentday='${new Date().toDateString()}'`,
     );
-    console.log(activities);
+
+    console.log(isLoading);
+
+    const [activityBucket, setActivityBucket] = React.useState<ActivityBucket>(
+        bucketizeActivities(activities ?? []),
+    );
+
+    const [codewarsActivities, setCodewarsActivities] = React.useState<
+        ActivityChartData[]
+    >([]);
+    const [edabitActivities, setEdabitActivities] = React.useState<
+        ActivityChartData[]
+    >([]);
+    const [leetcodeActivities, setLeetcodeActivities] = React.useState<
+        ActivityChartData[]
+    >([]);
+    const [languagesActivities, setLanguagesActivities] = React.useState<
+        ActivityChartData[]
+    >([]);
+
     const [overlays, setOverlays] =
         React.useState<DashboardOverlays>(initialOverlays);
 
@@ -131,6 +159,21 @@ const Dashboard = (): JSX.Element => {
             }
         };
     }, []);
+
+    React.useEffect(() => {
+        if (activityBucket !== undefined) {
+            setCodewarsActivities(
+                convertApiActivities(activityBucket.codewars),
+            );
+            setEdabitActivities(convertApiActivities(activityBucket.edabit));
+            setLeetcodeActivities(
+                convertApiActivities(activityBucket.leetcode),
+            );
+            setLanguagesActivities(
+                convertApiActivities(activityBucket.languages),
+            );
+        }
+    }, [activityBucket]);
 
     const chartData = [
         {
@@ -214,64 +257,74 @@ const Dashboard = (): JSX.Element => {
                             </span>
                         </div>
                     </OverlayTrigger>
-                    <div className={styles.programming_problems_graphs}>
-                        <ResponsiveContainer
-                            height="100%"
-                            minHeight={undefined}
-                            width="50%"
+                    {isLoading ? (
+                        <div
+                            className={
+                                styles.programming_problems_loading_graphs
+                            }
                         >
-                            <AreaChart
-                                data={chartData}
-                                height={250}
-                                width={500}
+                            <GridLoader color="#8884d1" size={25} />
+                        </div>
+                    ) : (
+                        <div className={styles.programming_problems_graphs}>
+                            <ResponsiveContainer
+                                height="100%"
+                                minHeight={undefined}
+                                width="50%"
                             >
-                                <XAxis dataKey="day" />
-                                <YAxis />
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <Legend
-                                    formatter={(value): string =>
-                                        `${value} (seconds)`
-                                    }
-                                />
-                                <Tooltip />
-                                <Area
-                                    dataKey="totalTime"
-                                    fill="rgba(0, 0, 0, .25)"
-                                    fillOpacity={1}
-                                    stroke="#8884d8"
-                                    type="monotone"
-                                />
-                            </AreaChart>
-                        </ResponsiveContainer>
-                        <ResponsiveContainer
-                            height="100%"
-                            minHeight={undefined}
-                            width="50%"
-                        >
-                            <ComposedChart
-                                data={chartData}
-                                height={250}
-                                width={700}
+                                <AreaChart
+                                    data={codewarsActivities}
+                                    height={250}
+                                    width={500}
+                                >
+                                    <XAxis dataKey="day" />
+                                    <YAxis />
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <Legend
+                                        formatter={(value): string =>
+                                            `${value} (seconds)`
+                                        }
+                                    />
+                                    <Tooltip />
+                                    <Area
+                                        dataKey="totalTime"
+                                        fill="rgba(0, 0, 0, .25)"
+                                        fillOpacity={1}
+                                        stroke="#8884d8"
+                                        type="monotone"
+                                    />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                            <ResponsiveContainer
+                                height="100%"
+                                minHeight={undefined}
+                                width="50%"
                             >
-                                <XAxis dataKey="day" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <CartesianGrid stroke="#f5f5f5" />
-                                <Area
-                                    dataKey="averageTime"
-                                    fill="#8884d8"
-                                    stroke="#8884d8"
-                                    type="monotone"
-                                />
-                                <Bar
-                                    barSize={20}
-                                    dataKey="numberProblems"
-                                    fill="#413ea0"
-                                />
-                            </ComposedChart>
-                        </ResponsiveContainer>
-                    </div>
+                                <ComposedChart
+                                    data={chartData}
+                                    height={250}
+                                    width={700}
+                                >
+                                    <XAxis dataKey="day" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <CartesianGrid stroke="#f5f5f5" />
+                                    <Area
+                                        dataKey="averageTime"
+                                        fill="#8884d8"
+                                        stroke="#8884d8"
+                                        type="monotone"
+                                    />
+                                    <Bar
+                                        barSize={20}
+                                        dataKey="numberProblems"
+                                        fill="#413ea0"
+                                    />
+                                </ComposedChart>
+                            </ResponsiveContainer>
+                        </div>
+                    )}
                 </div>
                 <div className={styles.programming_section}>
                     <OverlayTrigger
