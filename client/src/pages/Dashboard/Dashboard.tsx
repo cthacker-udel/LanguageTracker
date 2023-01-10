@@ -553,18 +553,20 @@ const Dashboard = (): JSX.Element => {
                         triggerOverlay(validDashboardKey);
                     }
                     const username = getUsername(document);
-                    console.log("username =", username);
-                    const addActivityResult = await ServerSideApi.post(
-                        "/activity/addActivity",
-                        {
-                            ...databasetiseActivity({
-                                ...values,
-                                type: key,
-                            } as ActivityData),
-                            username,
-                        },
-                    );
-                    console.log(addActivityResult);
+                    const addActivityResult =
+                        await ServerSideApi.post<Response>(
+                            "/activity/addActivity",
+                            {
+                                ...databasetiseActivity({
+                                    ...values,
+                                    type: key,
+                                } as ActivityData),
+                                username,
+                            },
+                        );
+                    if (addActivityResult.status === 204) {
+                        console.log("Success!");
+                    }
                 }}
                 programmingLanguageImage={gatherImageFromValidDashboardOverlayKey()}
                 title={`Add ${capitalize(
