@@ -3,6 +3,7 @@ import React from "react";
 import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { TextConstants, ValueConstants } from "../../common";
 import { ServerSideApi } from "../../common/api";
@@ -62,6 +63,7 @@ export const SignUp = (): JSX.Element => {
 
     const signUp = React.useCallback(
         async (signUpValues: FormData) => {
+            const signingUp = toast.loading("Signing up...");
             const pushedValues: { [key: string]: Date | string } = {};
             const allValues: { [key: string]: Date | string } = signUpValues;
             for (const eachDirtyField of Object.keys(dirtyFields)) {
@@ -71,9 +73,22 @@ export const SignUp = (): JSX.Element => {
                 ...pushedValues,
             });
             if (result.status === 204) {
+                toast.update(signingUp, {
+                    autoClose: 8000,
+                    closeButton: true,
+                    isLoading: false,
+                    render: "Signed up successfully!",
+                    type: "success",
+                });
                 navigate("/login");
             } else {
-                console.log("Failure!");
+                toast.update(signingUp, {
+                    autoClose: 8000,
+                    closeButton: true,
+                    isLoading: false,
+                    render: "Failed to Sign Up.",
+                    type: "error",
+                });
             }
         },
         [dirtyFields, navigate],
@@ -84,7 +99,49 @@ export const SignUp = (): JSX.Element => {
             <div className={styles.sign_up_page_title}>
                 {TextConstants.SIGN_UP_PAGE.TITLE}
             </div>
-            <Form className={styles.sign_up_page_form}>
+            <Form
+                className={styles.sign_up_page_form}
+                onKeyDown={async (
+                    event: React.KeyboardEvent<HTMLFormElement>,
+                ): Promise<void> => {
+                    if (event.key === "Enter" && isValid) {
+                        const signUpValues = getValues();
+                        const signingUp = toast.loading("Signing up...");
+                        const pushedValues: { [key: string]: Date | string } =
+                            {};
+                        const allValues: { [key: string]: Date | string } =
+                            signUpValues;
+                        for (const eachDirtyField of Object.keys(dirtyFields)) {
+                            pushedValues[eachDirtyField] =
+                                allValues[eachDirtyField];
+                        }
+                        const result = await ServerSideApi.post<Response>(
+                            "/user/addUser",
+                            {
+                                ...pushedValues,
+                            },
+                        );
+                        if (result.status === 204) {
+                            toast.update(signingUp, {
+                                autoClose: 8000,
+                                closeButton: true,
+                                isLoading: false,
+                                render: "Signed up successfully!",
+                                type: "success",
+                            });
+                            navigate("/login");
+                        } else {
+                            toast.update(signingUp, {
+                                autoClose: 8000,
+                                closeButton: true,
+                                isLoading: false,
+                                render: "Failed to Sign Up.",
+                                type: "error",
+                            });
+                        }
+                    }
+                }}
+            >
                 <Form.Group controlId="sign_up_first_name">
                     <Form.Label>
                         {TextConstants.SIGN_UP_PAGE.FIRST_NAME_LABEL}

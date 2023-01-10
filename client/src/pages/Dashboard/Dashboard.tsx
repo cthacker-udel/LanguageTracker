@@ -4,6 +4,7 @@
 import React from "react";
 import { Button, Image, OverlayTrigger } from "react-bootstrap";
 import type { OverlayTriggerRenderProps } from "react-bootstrap/esm/OverlayTrigger";
+import { toast } from "react-toastify";
 import {
     Area,
     AreaChart,
@@ -570,6 +571,7 @@ const Dashboard = (): JSX.Element => {
                     key: ActivityType,
                     values: Partial<ActivityData>,
                 ): Promise<void> => {
+                    const activityStatus = toast.loading("Adding Activity...");
                     const validDashboardKey = gatherValidDashboardOverlayKey();
                     if (validDashboardKey !== undefined) {
                         triggerOverlay(validDashboardKey);
@@ -587,7 +589,21 @@ const Dashboard = (): JSX.Element => {
                             },
                         );
                     if (addActivityResult.status === 204) {
-                        console.log("Success!");
+                        toast.update(activityStatus, {
+                            autoClose: 8000,
+                            closeButton: true,
+                            isLoading: false,
+                            render: "Activity Successfully Added!",
+                            type: "success",
+                        });
+                    } else {
+                        toast.update(activityStatus, {
+                            autoClose: 8000,
+                            closeButton: true,
+                            isLoading: false,
+                            render: "Activity Addition Failed!",
+                            type: "error",
+                        });
                     }
                 }}
                 programmingLanguageImage={gatherImageFromValidDashboardOverlayKey()}

@@ -3,6 +3,7 @@ import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { TextConstants, validateObject, ValueConstants } from "../../common";
 import { ServerSideApi } from "../../common/api";
@@ -59,17 +60,30 @@ export const LoginPage = (): JSX.Element => {
                 className={styles.login_form}
                 onKeyDown={async (
                     event: React.KeyboardEvent<HTMLFormElement>,
-                    // eslint-disable-next-line require-await, @typescript-eslint/require-await -- disabled
                 ): Promise<void> => {
                     if (event.key === "Enter" && isValid) {
+                        const loggingIn = toast.loading("Logging in...");
                         const response = await ServerSideApi.post<Response>(
                             "/user/login",
                             { ...getValues() },
                         );
                         if (response.status === 204) {
+                            toast.update(loggingIn, {
+                                autoClose: 8000,
+                                closeButton: true,
+                                isLoading: false,
+                                render: "Logged in!",
+                                type: "success",
+                            });
                             navigate("/dashboard");
                         } else {
-                            console.log("Failed!");
+                            toast.update(loggingIn, {
+                                autoClose: 8000,
+                                closeButton: true,
+                                isLoading: false,
+                                render: "Failed to login.",
+                                type: "error",
+                            });
                         }
                     }
                 }}
@@ -183,14 +197,28 @@ export const LoginPage = (): JSX.Element => {
                             Object.keys(errors).length > 0
                         }
                         onClick={async (): Promise<void> => {
+                            const loggingIn = toast.loading("Logging in...");
                             const response = await ServerSideApi.post<Response>(
                                 "/user/login",
                                 { ...getValues() },
                             );
                             if (response.status === 204) {
+                                toast.update(loggingIn, {
+                                    autoClose: 8000,
+                                    closeButton: true,
+                                    isLoading: false,
+                                    render: "Logged in!",
+                                    type: "success",
+                                });
                                 navigate("/dashboard");
                             } else {
-                                console.log("Failed!");
+                                toast.update(loggingIn, {
+                                    autoClose: 8000,
+                                    closeButton: true,
+                                    isLoading: false,
+                                    render: "Failed to login.",
+                                    type: "error",
+                                });
                             }
                         }}
                         variant="primary"
