@@ -68,6 +68,9 @@ const initialOverlays: DashboardOverlays = {
  */
 const Dashboard = (): JSX.Element => {
     const { backToLogin, validating } = useSession(true);
+    const [sessionUsername, setSessionUsername] = React.useState<
+        string | undefined
+    >(undefined);
 
     const { data: activities, mutate } = useSwr<APICompliantActivity[]>(
         `/api/activity/dashboard?currentday='${new Date().toDateString()}'`,
@@ -178,6 +181,8 @@ const Dashboard = (): JSX.Element => {
             mainLayout.style.backgroundColor = "#16171b";
             mainLayout.style.padding = "1em";
         }
+        const cookieUsername = getUsername(document);
+        setSessionUsername(cookieUsername);
 
         return () => {
             if (mainLayout !== null) {
@@ -220,7 +225,11 @@ const Dashboard = (): JSX.Element => {
                     overlay={(
                         properties: OverlayTriggerRenderProps,
                     ): JSX.Element =>
-                        renderTooltip(properties, { message: "Logout" })
+                        renderTooltip(properties, {
+                            message: `Logout${
+                                sessionUsername ? ` ${sessionUsername}` : ""
+                            }`,
+                        })
                     }
                     placement="right"
                 >
