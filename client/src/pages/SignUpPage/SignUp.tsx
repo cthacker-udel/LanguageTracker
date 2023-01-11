@@ -1,3 +1,5 @@
+/* eslint-disable no-console -- disabled */
+/* eslint-disable sonarjs/no-duplicate-string -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import React from "react";
 import { Button, Form } from "react-bootstrap";
@@ -69,19 +71,33 @@ export const SignUp = (): JSX.Element => {
             for (const eachDirtyField of Object.keys(dirtyFields)) {
                 pushedValues[eachDirtyField] = allValues[eachDirtyField];
             }
-            const result = await ServerSideApi.post<Response>("/user/addUser", {
-                ...pushedValues,
-            });
-            if (result.status === 204) {
-                toast.update(signingUp, {
-                    autoClose: 8000,
-                    closeButton: true,
-                    isLoading: false,
-                    render: "Signed up successfully!",
-                    type: "success",
-                });
-                navigate("/login");
-            } else {
+            try {
+                const result = await ServerSideApi.post<Response>(
+                    "/user/addUser",
+                    {
+                        ...pushedValues,
+                    },
+                );
+                if (result.status === 204) {
+                    toast.update(signingUp, {
+                        autoClose: 8000,
+                        closeButton: true,
+                        isLoading: false,
+                        render: "Signed up successfully!",
+                        type: "success",
+                    });
+                    navigate("/login");
+                } else {
+                    toast.update(signingUp, {
+                        autoClose: 8000,
+                        closeButton: true,
+                        isLoading: false,
+                        render: "Failed to Sign Up.",
+                        type: "error",
+                    });
+                }
+            } catch (error: unknown) {
+                console.error(`Failed signing up ${(error as Error)?.stack}`);
                 toast.update(signingUp, {
                     autoClose: 8000,
                     closeButton: true,
@@ -115,22 +131,35 @@ export const SignUp = (): JSX.Element => {
                             pushedValues[eachDirtyField] =
                                 allValues[eachDirtyField];
                         }
-                        const result = await ServerSideApi.post<Response>(
-                            "/user/addUser",
-                            {
-                                ...pushedValues,
-                            },
-                        );
-                        if (result.status === 204) {
-                            toast.update(signingUp, {
-                                autoClose: 8000,
-                                closeButton: true,
-                                isLoading: false,
-                                render: "Signed up successfully!",
-                                type: "success",
-                            });
-                            navigate("/login");
-                        } else {
+                        try {
+                            const result = await ServerSideApi.post<Response>(
+                                "/user/addUser",
+                                {
+                                    ...pushedValues,
+                                },
+                            );
+                            if (result.status === 204) {
+                                toast.update(signingUp, {
+                                    autoClose: 8000,
+                                    closeButton: true,
+                                    isLoading: false,
+                                    render: "Signed up successfully!",
+                                    type: "success",
+                                });
+                                navigate("/login");
+                            } else {
+                                toast.update(signingUp, {
+                                    autoClose: 8000,
+                                    closeButton: true,
+                                    isLoading: false,
+                                    render: "Failed to Sign Up.",
+                                    type: "error",
+                                });
+                            }
+                        } catch (error: unknown) {
+                            console.error(
+                                `Failed signing up ${(error as Error)?.stack}`,
+                            );
                             toast.update(signingUp, {
                                 autoClose: 8000,
                                 closeButton: true,
