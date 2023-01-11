@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment -- disabled */
 /* eslint-disable require-await -- disabled */
 /* eslint-disable @typescript-eslint/no-explicit-any -- disabled for swr cache implementation */
 /* eslint-disable jest/require-hook -- disabled */
@@ -35,12 +36,32 @@ root.render(
     >
         <BrowserRouter>
             <Routes>
-                <Route element={<AppLayout />} path="/">
-                    <Route element={<HomePage />} index />
-                    <Route element={<LoginPage />} path="login" />
-                    <Route element={<SignUp />} path="signup" />
-                    <Route element={<Dashboard />} path="dashboard" />
-                    <Route element={<ErrorPage />} path="*" />
+                <Route element={<AppLayout />} errorElement={<></>} path="/">
+                    <Route
+                        element={<HomePage />}
+                        errorElement={<ErrorPage />}
+                        index
+                    />
+                    <Route
+                        element={<LoginPage />}
+                        errorElement={<ErrorPage />}
+                        path="login"
+                    />
+                    <Route
+                        element={<SignUp />}
+                        errorElement={<ErrorPage />}
+                        path="signup"
+                    />
+                    <Route
+                        element={<Dashboard />}
+                        errorElement={<ErrorPage />}
+                        path="dashboard"
+                    />
+                    <Route
+                        element={<ErrorPage />}
+                        errorElement={<></>}
+                        path="*"
+                    />
                 </Route>
             </Routes>
             <ToastContainer autoClose={8000} closeButton />
