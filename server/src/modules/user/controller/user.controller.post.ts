@@ -2,9 +2,17 @@ import type { Route, User } from "@types";
 import type { Request, Response } from "express";
 import type { Client } from "pg";
 
-import { type BaseControllerSpec, userPostSchema } from "../../../../common";
+import {
+    type BaseControllerSpec,
+    analyzeUser,
+    userPostSchema,
+} from "../../../../common";
 import { Logger } from "../../../../common/log/Logger";
-import { addSession } from "../../../../common/middleware/sessionMethods";
+import {
+    addSession,
+    getSessionUsername,
+    validateSession,
+} from "../../../../common/middleware/sessionMethods";
 import type { UserService } from "../user.service";
 
 /**
@@ -110,8 +118,32 @@ export class UserControllerPost implements BaseControllerSpec<UserService> {
         }
     };
 
+    public validateUserSession = async (
+        request: Request,
+        response: Response,
+    ): Promise<void> => {
+        const failureMessage = "Session is invalid";
+        try {
+            const validateResult =
+                (await validateSession(request, this.client, this.service)) &&
+                analyzeUser(request, getSessionUsername(request));
+            if (validateResult) {
+                response.status(204);
+                response.send({});
+            } else {
+                response.status(401);
+                response.send({ result: failureMessage });
+            }
+        } catch (error: unknown) {
+            Logger.error(failureMessage, error);
+            response.status(400);
+            response.send({ result: failureMessage });
+        }
+    };
+
     public getRoutes = (): Route[] => [
         ["addUser", this.addUser],
         ["login", this.login],
+        ["validateSession", this.validateUserSession],
     ];
 }

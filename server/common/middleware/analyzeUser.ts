@@ -9,7 +9,10 @@ import { getSessionUsername } from "./sessionMethods";
  * @param username - The username we are sending in our request
  * @returns Whether or not both users match
  */
-export const analyzeUser = (request: Request, username: string): boolean => {
+export const analyzeUser = (
+    request: Request,
+    username: string | undefined,
+): boolean => {
     const session_username = getSessionUsername(request);
     if (session_username === undefined || username === undefined) {
         return false;

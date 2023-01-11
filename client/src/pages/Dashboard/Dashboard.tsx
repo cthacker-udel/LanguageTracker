@@ -37,6 +37,7 @@ import { ServerSideApi } from "../../common/api";
 import { convertApiActivities } from "../../common/helpers/convertApiActivities";
 import { dataPlaceholder } from "../../common/helpers/dataPlaceholder";
 import { renderTooltip } from "../../common/helpers/renderTooltip";
+import { useSession } from "../../hooks";
 import codewarsLogo from "./codewarslogo.svg";
 import styles from "./Dashboard.module.css";
 import edabitLogo from "./edabitlogo.png";
@@ -65,6 +66,8 @@ const initialOverlays: DashboardOverlays = {
  * @returns Dashboard component, which houses all the logic for starting your account in the language tracker
  */
 const Dashboard = (): JSX.Element => {
+    const { validating } = useSession(true);
+
     const { data: activities } = useSwr<APICompliantActivity[]>(
         `/api/activity/dashboard?currentday='${new Date().toDateString()}'`,
     );
@@ -194,6 +197,11 @@ const Dashboard = (): JSX.Element => {
     React.useEffect(() => {
         setActivityBucket(bucketizeActivities(activities ?? []));
     }, [activities]);
+
+    if (validating) {
+        // eslint-disable-next-line react/jsx-no-useless-fragment -- needed
+        return <></>;
+    }
 
     return (
         <>

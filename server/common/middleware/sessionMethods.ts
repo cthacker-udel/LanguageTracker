@@ -213,7 +213,8 @@ const cookieMiddleware = (
     try {
         if (
             (request.url.includes("login") ||
-                request.url.includes("addUser")) &&
+                request.url.includes("addUser") ||
+                request.url.includes("validateSession")) &&
             !doesSessionExist(request)
         ) {
             next();
@@ -223,14 +224,16 @@ const cookieMiddleware = (
                     if (result) {
                         next();
                     } else {
-                        Logger.log("unauthorized");
+                        Logger.log(
+                            `${request.url} - ${request.ip} - unauthorized`,
+                        );
                         rejectSession(request, response);
                         response.status(401);
                         response.send({ result: "Unauthorized" });
                     }
                 })
                 .catch((error: unknown) => {
-                    Logger.log("unauthorized");
+                    Logger.log(`${request.url} - ${request.ip} - unauthorized`);
                     rejectSession(request, response);
                     Logger.error("Failed to validate session cookie", error);
                     response.status(401);
@@ -253,4 +256,5 @@ export {
     getSessionCookie,
     getSessionUsername,
     rejectSession,
+    validateSession,
 };
