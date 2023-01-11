@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ServerSideApi } from "../../common";
 
 type useSessionReturn = {
+    backToLogin: () => void;
     validating: boolean;
     sessionValid: boolean;
 };
@@ -20,6 +21,10 @@ const useSession = (navigateOnFail = false): useSessionReturn => {
     const navigate = useNavigate();
     const [validating, setValidating] = React.useState(true);
     const [sessionValid, setSessionValid] = React.useState<boolean>(true);
+
+    const backToLogin = React.useCallback(() => {
+        navigate("/login");
+    }, [navigate]);
 
     React.useEffect(() => {
         setValidating(true);
@@ -53,6 +58,7 @@ const useSession = (navigateOnFail = false): useSessionReturn => {
     }, [navigate, navigateOnFail]);
 
     return {
+        backToLogin,
         sessionValid,
         validating,
     };

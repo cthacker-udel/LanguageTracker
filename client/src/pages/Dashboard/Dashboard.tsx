@@ -1,3 +1,4 @@
+/* eslint-disable ramda/prefer-ramda-boolean -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 /* eslint-disable camelcase -- disabled */
 
@@ -66,9 +67,9 @@ const initialOverlays: DashboardOverlays = {
  * @returns Dashboard component, which houses all the logic for starting your account in the language tracker
  */
 const Dashboard = (): JSX.Element => {
-    const { validating } = useSession(true);
+    const { backToLogin, validating } = useSession(true);
 
-    const { data: activities } = useSwr<APICompliantActivity[]>(
+    const { data: activities, mutate } = useSwr<APICompliantActivity[]>(
         `/api/activity/dashboard?currentday='${new Date().toDateString()}'`,
     );
 
@@ -107,6 +108,13 @@ const Dashboard = (): JSX.Element => {
 
     const [overlays, setOverlays] =
         React.useState<DashboardOverlays>(initialOverlays);
+
+    const logout = React.useCallback(() => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises -- disabled
+        mutate(() => [], { revalidate: false });
+
+        backToLogin();
+    }, [backToLogin, mutate]);
 
     const triggerOverlay = React.useCallback(
         (trigger: DashboardOverlayKeys) => {
@@ -218,6 +226,9 @@ const Dashboard = (): JSX.Element => {
                 >
                     <Button
                         className={styles.dashboard_logout_button}
+                        onClick={(): void => {
+                            logout();
+                        }}
                         variant="outline-light"
                     >
                         <i className="fa-solid fa-right-from-bracket fa-xs" />
