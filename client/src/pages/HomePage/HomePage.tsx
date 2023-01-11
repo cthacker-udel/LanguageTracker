@@ -1,8 +1,10 @@
+/* eslint-disable react/jsx-no-useless-fragment -- disabled */
 import React from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import { TextConstants } from "../../common/constants";
+import { useSession } from "../../hooks";
 import styles from "./HomePage.module.css";
 import skyBackground from "./skybg1.gif";
 
@@ -11,6 +13,7 @@ import skyBackground from "./skybg1.gif";
  * @returns The Home Page of the application
  */
 export const HomePage = (): JSX.Element => {
+    const { sessionValid, validating } = useSession();
     const navigator = useNavigate();
 
     React.useEffect(() => {
@@ -33,6 +36,14 @@ export const HomePage = (): JSX.Element => {
             }
         };
     }, []);
+
+    if (validating) {
+        return <></>;
+    }
+
+    if (sessionValid) {
+        navigator("/dashboard");
+    }
 
     return (
         <div className={styles.home_page_layout}>

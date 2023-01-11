@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment -- disabled */
 /* eslint-disable no-console -- disabled */
 /* eslint-disable sonarjs/no-duplicate-string -- disabled */
 
@@ -10,6 +11,7 @@ import { toast } from "react-toastify";
 
 import { TextConstants, validateObject, ValueConstants } from "../../common";
 import { ServerSideApi } from "../../common/api";
+import { useSession } from "../../hooks";
 import loginBackground from "./loginbg.gif";
 import styles from "./LoginPage.module.css";
 
@@ -24,6 +26,7 @@ type FormData = {
  * @returns The Login Page component, which houses the logic for logging a user in
  */
 export const LoginPage = (): JSX.Element => {
+    const { sessionValid, validating } = useSession();
     const navigate = useNavigate();
 
     const { formState, getValues, register } = useForm<FormData>({
@@ -53,6 +56,14 @@ export const LoginPage = (): JSX.Element => {
             }
         };
     }, []);
+
+    if (validating) {
+        return <></>;
+    }
+
+    if (sessionValid) {
+        navigate("/dashboard");
+    }
 
     return (
         <div className={styles.login_page_layout}>

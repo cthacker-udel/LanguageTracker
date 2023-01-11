@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment -- disabled */
 /* eslint-disable no-console -- disabled */
 /* eslint-disable sonarjs/no-duplicate-string -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
@@ -9,6 +10,7 @@ import { toast } from "react-toastify";
 
 import { TextConstants, ValueConstants } from "../../common";
 import { ServerSideApi } from "../../common/api";
+import { useSession } from "../../hooks";
 import signUpBackground from "./signupbg.gif";
 import styles from "./SignUpPage.module.css";
 
@@ -25,6 +27,7 @@ type FormData = {
  * The Sign-Up form, consists of data the user can populate in their profile
  */
 export const SignUp = (): JSX.Element => {
+    const { sessionValid, validating } = useSession();
     const navigate = useNavigate();
     const { formState, register, getValues } = useForm<FormData>({
         defaultValues: {
@@ -109,6 +112,14 @@ export const SignUp = (): JSX.Element => {
         },
         [dirtyFields, navigate],
     );
+
+    if (validating) {
+        return <></>;
+    }
+
+    if (sessionValid) {
+        navigate("/dashboard");
+    }
 
     return (
         <div className={styles.sign_up_page_layout}>

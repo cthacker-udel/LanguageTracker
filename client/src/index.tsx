@@ -19,34 +19,31 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-    <React.StrictMode>
-        <SWRConfig
-            value={{
-                fetcher: async (resource, init): Promise<Response> =>
-                    fetch(`http://localhost:3001${resource}`, {
-                        ...init,
-                        credentials: "include",
-                    }).then(
-                        async (response: Response): Promise<any> =>
-                            response.json(),
-                    ),
-                provider: (): Map<any, any> => new Map(),
-                refreshInterval: 1500,
-                revalidateOnMount: true,
-            }}
-        >
-            <BrowserRouter>
-                <Routes>
-                    <Route element={<AppLayout />} path="/">
-                        <Route element={<HomePage />} index />
-                        <Route element={<LoginPage />} path="login" />
-                        <Route element={<SignUp />} path="signup" />
-                        <Route element={<Dashboard />} path="dashboard" />
-                        <Route element={<ErrorPage />} path="*" />
-                    </Route>
-                </Routes>
-                <ToastContainer autoClose={8000} closeButton />
-            </BrowserRouter>
-        </SWRConfig>
-    </React.StrictMode>,
+    <SWRConfig
+        value={{
+            fetcher: async (resource, init): Promise<Response> =>
+                fetch(`http://localhost:3001${resource}`, {
+                    ...init,
+                    credentials: "include",
+                }).then(
+                    async (response: Response): Promise<any> => response.json(),
+                ),
+            provider: (): Map<any, any> => new Map(),
+            refreshInterval: 1250,
+            revalidateOnMount: true,
+        }}
+    >
+        <BrowserRouter>
+            <Routes>
+                <Route element={<AppLayout />} path="/">
+                    <Route element={<HomePage />} index />
+                    <Route element={<LoginPage />} path="login" />
+                    <Route element={<SignUp />} path="signup" />
+                    <Route element={<Dashboard />} path="dashboard" />
+                    <Route element={<ErrorPage />} path="*" />
+                </Route>
+            </Routes>
+            <ToastContainer autoClose={8000} closeButton />
+        </BrowserRouter>
+    </SWRConfig>,
 );
