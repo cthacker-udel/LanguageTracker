@@ -31,7 +31,7 @@ root.render(
                             response.json(),
                     ),
                 provider: (): Map<any, any> => new Map(),
-                refreshInterval: 5000,
+                refreshInterval: 1500,
                 revalidateOnMount: true,
             }}
         >

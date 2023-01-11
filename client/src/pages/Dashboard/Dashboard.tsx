@@ -5,6 +5,7 @@
 import React from "react";
 import { Button, Image, OverlayTrigger } from "react-bootstrap";
 import type { OverlayTriggerRenderProps } from "react-bootstrap/esm/OverlayTrigger";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
     Area,
@@ -67,14 +68,16 @@ const initialOverlays: DashboardOverlays = {
  * @returns Dashboard component, which houses all the logic for starting your account in the language tracker
  */
 const Dashboard = (): JSX.Element => {
-    const { backToLogin, validating } = useSession(true);
-    const [sessionUsername, setSessionUsername] = React.useState<
-        string | undefined
-    >(undefined);
+    const { sessionValid, validating } = useSession();
+    const navigate = useNavigate();
 
     const { data: activities, mutate } = useSwr<APICompliantActivity[]>(
         `/api/activity/dashboard?currentday='${new Date().toDateString()}'`,
     );
+
+    const [sessionUsername, setSessionUsername] = React.useState<
+        string | undefined
+    >(undefined);
 
     const [activityBucket, setActivityBucket] = React.useState<ActivityBucket>(
         bucketizeActivities(activities ?? []),
@@ -112,11 +115,39 @@ const Dashboard = (): JSX.Element => {
     const [overlays, setOverlays] =
         React.useState<DashboardOverlays>(initialOverlays);
 
+    const backToLogin = React.useMemo(
+        () => () => {
+            navigate("/login");
+        },
+        [navigate],
+    );
+
     const logout = React.useCallback(() => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises -- disabled
         mutate(() => [], { revalidate: false });
-
-        backToLogin();
+        const logoutToast = toast.loading("Logging out...");
+        ServerSideApi.post<Response>("/user/logout")
+            .then((_: Response) => {
+                toast.update(logoutToast, {
+                    autoClose: 3000,
+                    closeButton: true,
+                    isLoading: false,
+                    render: "Logged out!",
+                    type: "success",
+                });
+                backToLogin();
+            })
+            .catch((error: unknown) => {
+                console.error(`Failed logging out ${(error as Error)?.stack}`);
+                toast.update(logoutToast, {
+                    autoClose: 3000,
+                    closeButton: true,
+                    isLoading: false,
+                    render: "Logged out!",
+                    type: "success",
+                });
+                backToLogin();
+            });
     }, [backToLogin, mutate]);
 
     const triggerOverlay = React.useCallback(
@@ -214,6 +245,10 @@ const Dashboard = (): JSX.Element => {
     if (validating) {
         // eslint-disable-next-line react/jsx-no-useless-fragment -- needed
         return <></>;
+    }
+
+    if (!sessionValid) {
+        backToLogin();
     }
 
     return (

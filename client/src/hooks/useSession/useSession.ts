@@ -1,12 +1,10 @@
 /* eslint-disable no-console -- disabled */
 /* eslint-disable unicorn/no-document-cookie -- disabled */
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 import { ServerSideApi } from "../../common";
 
 type useSessionReturn = {
-    backToLogin: () => void;
     validating: boolean;
     sessionValid: boolean;
 };
@@ -17,48 +15,31 @@ type useSessionReturn = {
  *
  * @param document - The document instance we are passing into the session
  */
-const useSession = (navigateOnFail = false): useSessionReturn => {
-    const navigate = useNavigate();
+const useSession = (): useSessionReturn => {
     const [validating, setValidating] = React.useState(true);
     const [sessionValid, setSessionValid] = React.useState<boolean>(true);
 
-    const backToLogin = React.useCallback(() => {
-        navigate("/login");
-    }, [navigate]);
-
     React.useEffect(() => {
-        setValidating(true);
+        console.log("running effect");
         ServerSideApi.post<Response>("/user/validateSession")
             .then((response: Response) => {
                 if (response.status === 204) {
                     setSessionValid(true);
-                    setValidating(false);
                 } else {
-                    if (navigateOnFail) {
-                        navigate("/");
-                    } else {
-                        document.cookie = "";
-                    }
                     setSessionValid(false);
-                    setValidating(false);
                 }
+                setValidating(false);
             })
             .catch((error: unknown) => {
                 setValidating(false);
                 setSessionValid(false);
-                navigate("/");
                 console.error(
                     `Failed validating session ${(error as Error)?.stack}`,
                 );
             });
-        return () => {
-            setValidating(false);
-            setSessionValid(false);
-        };
-    }, [navigate, navigateOnFail]);
+    }, []);
 
     return {
-        backToLogin,
         sessionValid,
         validating,
     };
