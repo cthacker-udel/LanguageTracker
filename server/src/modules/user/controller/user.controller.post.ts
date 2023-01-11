@@ -11,6 +11,7 @@ import { Logger } from "../../../../common/log/Logger";
 import {
     addSession,
     getSessionUsername,
+    SESSION_CONSTANTS,
     validateSession,
 } from "../../../../common/middleware/sessionMethods";
 import type { UserService } from "../user.service";
@@ -141,9 +142,55 @@ export class UserControllerPost implements BaseControllerSpec<UserService> {
         }
     };
 
+    public logout = async (
+        request: Request,
+        response: Response,
+    ): Promise<void> => {
+        const failureMessage = "Failed to logout";
+        try {
+            const username = getSessionUsername(request);
+            if (username !== undefined) {
+                const partialUser = await this.service.findUserByUsername(
+                    this.client,
+                    username,
+                );
+                if (partialUser?.user_id !== undefined) {
+                    const { user_id } = partialUser;
+                    const doesSessionExist =
+                        await this.service.doesSessionExist(
+                            this.client,
+                            user_id,
+                        );
+                    if (doesSessionExist) {
+                        const loggedOut = await this.service.removeSession(
+                            this.client,
+                            user_id,
+                        );
+                        Logger.log(
+                            `Session was ${
+                                loggedOut ? "removed" : "not removed"
+                            }`,
+                        );
+                    }
+                }
+            }
+            response.clearCookie(SESSION_CONSTANTS.COOKIE_KEY);
+            response.clearCookie(SESSION_CONSTANTS.USERNAME_KEY);
+            response.status(204);
+            response.send({});
+        } catch (error: unknown) {
+            Logger.error(failureMessage, error);
+            response.status(204);
+            response.clearCookie(SESSION_CONSTANTS.COOKIE_KEY);
+            response.clearCookie(SESSION_CONSTANTS.USERNAME_KEY);
+            response.send({});
+        }
+    };
+
     public getRoutes = (): Route[] => [
         ["addUser", this.addUser],
         ["login", this.login],
         ["validateSession", this.validateUserSession],
+        ["logout", this.logout],
     ];
 }

@@ -249,12 +249,12 @@ const cookieMiddleware = (
 
 export {
     addSession,
-    CONSTANTS,
     cookieMiddleware,
     doesSessionExist,
     getSession,
     getSessionCookie,
     getSessionUsername,
     rejectSession,
+    CONSTANTS as SESSION_CONSTANTS,
     validateSession,
 };

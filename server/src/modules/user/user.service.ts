@@ -277,6 +277,38 @@ export class UserService extends BaseService {
     };
 
     /**
+     * Determines if a session is in the records for the user
+     *
+     * @param client - The psql client
+     * @param user_id - The user_id we are analyzing if the session for that user exists
+     * @returns Whether or not the session exists
+     */
+    public readonly doesSessionExist = async (
+        client: Client,
+        user_id: number,
+    ): Promise<boolean> => {
+        const findSessionQuery = `SELECT id, user_id FROM "SESSION_SECRET" WHERE user_id=${user_id}`;
+        const foundSessionResult = await client.query(findSessionQuery);
+        return foundSessionResult.rowCount > 0;
+    };
+
+    /**
+     * Attempts to remove a session row from the database
+     *
+     * @param client - The psql client
+     * @param user_id - The user_id we are using to remove the row
+     * @returns Whether or not the row was removed
+     */
+    public readonly removeSession = async (
+        client: Client,
+        user_id: number,
+    ): Promise<boolean> => {
+        const removeSessionQuery = `DELETE FROM "SESSION_SECRET" WHERE user_id=${user_id}`;
+        const removeSessionResult = await client.query(removeSessionQuery);
+        return removeSessionResult.rowCount > 0;
+    };
+
+    /**
      * Finds the encryption data associated with the user
      *
      * @param client - The client we are using to execute the query to find the encryption data
