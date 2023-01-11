@@ -5,8 +5,8 @@ import { Tooltip } from "react-bootstrap";
 import type { OverlayTriggerRenderProps } from "react-bootstrap/esm/OverlayTrigger";
 
 type TooltipMessage = {
-    title: string;
-    message: string;
+    title?: string;
+    message?: string;
 };
 
 /**
@@ -23,8 +23,12 @@ export const renderTooltip = (
         return (
             <Tooltip id="programming_lang_tooltip" {...properties}>
                 <div className="d-flex flex-column">
-                    <div>{convertedContent.title}</div>
-                    <div>{convertedContent.message}</div>
+                    {convertedContent.title && (
+                        <div>{convertedContent.title}</div>
+                    )}
+                    {convertedContent.message && (
+                        <div>{convertedContent.message}</div>
+                    )}
                 </div>
             </Tooltip>
         );

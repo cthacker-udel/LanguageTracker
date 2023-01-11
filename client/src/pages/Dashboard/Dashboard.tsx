@@ -207,6 +207,22 @@ const Dashboard = (): JSX.Element => {
         <>
             <div className={styles.dashboard_title}>
                 {"Language Tracker Dashboard"}
+                <OverlayTrigger
+                    delay={{ hide: 250, show: 250 }}
+                    overlay={(
+                        properties: OverlayTriggerRenderProps,
+                    ): JSX.Element =>
+                        renderTooltip(properties, { message: "Logout" })
+                    }
+                    placement="right"
+                >
+                    <Button
+                        className={styles.dashboard_logout_button}
+                        variant="outline-light"
+                    >
+                        <i className="fa-solid fa-right-from-bracket fa-xs" />
+                    </Button>
+                </OverlayTrigger>
             </div>
             <div className={styles.dashboard_content}>
                 <div className={styles.programming_section}>
