@@ -1,3 +1,4 @@
+/* eslint-disable no-console -- disabled */
 /* eslint-disable sonarjs/no-duplicate-string -- disabled */
 
 import React from "react";
