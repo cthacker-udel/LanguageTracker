@@ -5,7 +5,7 @@
 import React from "react";
 import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { TextConstants, ValueConstants } from "../../common";
@@ -118,7 +118,7 @@ export const SignUp = (): JSX.Element => {
     }
 
     if (sessionValid) {
-        navigate("/dashboard");
+        return <Navigate to="/dashboard" />;
     }
 
     return (

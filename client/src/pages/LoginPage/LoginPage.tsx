@@ -6,7 +6,7 @@ import React from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { TextConstants, validateObject, ValueConstants } from "../../common";
@@ -62,7 +62,7 @@ export const LoginPage = (): JSX.Element => {
     }
 
     if (sessionValid) {
-        navigate("/dashboard");
+        return <Navigate to="/dashboard" />;
     }
 
     return (

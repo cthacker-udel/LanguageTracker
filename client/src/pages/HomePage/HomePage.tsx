@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-useless-fragment -- disabled */
 import React from "react";
 import { Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import { TextConstants } from "../../common/constants";
 import { useSession } from "../../hooks";
@@ -42,7 +42,7 @@ export const HomePage = (): JSX.Element => {
     }
 
     if (sessionValid) {
-        navigator("/dashboard");
+        return <Navigate to="/dashboard" />;
     }
 
     return (

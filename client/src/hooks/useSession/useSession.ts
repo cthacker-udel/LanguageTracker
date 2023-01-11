@@ -19,7 +19,7 @@ const useSession = (): useSessionReturn => {
     const [validating, setValidating] = React.useState(true);
     const [sessionValid, setSessionValid] = React.useState<boolean>(true);
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         console.log("running effect");
         ServerSideApi.post<Response>("/user/validateSession")
             .then((response: Response) => {
