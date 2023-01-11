@@ -1,3 +1,4 @@
+/* eslint-disable no-console -- disabled */
 /* eslint-disable ramda/prefer-ramda-boolean -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 /* eslint-disable camelcase -- disabled */
