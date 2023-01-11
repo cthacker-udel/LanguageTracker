@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/no-duplicate-string -- disabled */
+
 import React from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
@@ -63,25 +65,39 @@ export const LoginPage = (): JSX.Element => {
                 ): Promise<void> => {
                     if (event.key === "Enter" && isValid) {
                         const loggingIn = toast.loading("Logging in...");
-                        const response = await ServerSideApi.post<Response>(
-                            "/user/login",
-                            { ...getValues() },
-                        );
-                        if (response.status === 204) {
+                        try {
+                            const response = await ServerSideApi.post<Response>(
+                                "/user/login",
+                                { ...getValues() },
+                            );
+                            console.log("response =", response);
+                            if (response.status === 204) {
+                                toast.update(loggingIn, {
+                                    autoClose: 8000,
+                                    closeButton: true,
+                                    isLoading: false,
+                                    render: "Logged in!",
+                                    type: "success",
+                                });
+                                navigate("/dashboard");
+                            } else {
+                                toast.update(loggingIn, {
+                                    autoClose: 8000,
+                                    closeButton: true,
+                                    isLoading: false,
+                                    render: "Failed to login.",
+                                    type: "error",
+                                });
+                            }
+                        } catch (error: unknown) {
+                            console.error(
+                                `Failed logging in ${(error as Error)?.stack}`,
+                            );
                             toast.update(loggingIn, {
                                 autoClose: 8000,
                                 closeButton: true,
                                 isLoading: false,
-                                render: "Logged in!",
-                                type: "success",
-                            });
-                            navigate("/dashboard");
-                        } else {
-                            toast.update(loggingIn, {
-                                autoClose: 8000,
-                                closeButton: true,
-                                isLoading: false,
-                                render: "Failed to login.",
+                                render: "Server Error Occurred, contact administrator.",
                                 type: "error",
                             });
                         }
@@ -198,25 +214,41 @@ export const LoginPage = (): JSX.Element => {
                         }
                         onClick={async (): Promise<void> => {
                             const loggingIn = toast.loading("Logging in...");
-                            const response = await ServerSideApi.post<Response>(
-                                "/user/login",
-                                { ...getValues() },
-                            );
-                            if (response.status === 204) {
+                            try {
+                                const response =
+                                    await ServerSideApi.post<Response>(
+                                        "/user/login",
+                                        { ...getValues() },
+                                    );
+                                if (response.status === 204) {
+                                    toast.update(loggingIn, {
+                                        autoClose: 8000,
+                                        closeButton: true,
+                                        isLoading: false,
+                                        render: "Logged in!",
+                                        type: "success",
+                                    });
+                                    navigate("/dashboard");
+                                } else {
+                                    toast.update(loggingIn, {
+                                        autoClose: 8000,
+                                        closeButton: true,
+                                        isLoading: false,
+                                        render: "Failed to login.",
+                                        type: "error",
+                                    });
+                                }
+                            } catch (error: unknown) {
+                                console.error(
+                                    `Failed logging in ${
+                                        (error as Error)?.stack
+                                    }`,
+                                );
                                 toast.update(loggingIn, {
                                     autoClose: 8000,
                                     closeButton: true,
                                     isLoading: false,
-                                    render: "Logged in!",
-                                    type: "success",
-                                });
-                                navigate("/dashboard");
-                            } else {
-                                toast.update(loggingIn, {
-                                    autoClose: 8000,
-                                    closeButton: true,
-                                    isLoading: false,
-                                    render: "Failed to login.",
+                                    render: "Server Error Occurred, contact administrator.",
                                     type: "error",
                                 });
                             }
