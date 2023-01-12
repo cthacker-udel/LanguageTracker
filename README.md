@@ -1,5 +1,7 @@
 # Language Tracker Application
-
+## You can find deployed versions here 
+- (server) https://github.com/cthacker-udel/LanguageTrackerService
+- (client) https://github.com/cthacker-udel/LanguageTrackerApp
 > Author: Cameron Thacker (cthacker@udel.edu)
 
 ### This application aims to aid one of my personal hobbies, which is practicing programming problems. I created this application to house a tracker for those activities, along with other side applications I commonly use as well.
